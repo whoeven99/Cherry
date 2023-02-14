@@ -2,6 +2,10 @@
     padding: 20px;
 }
 
+.common__label {
+    height: 40px;
+}
+
 .editorWrapper {
     padding: 0 80px;
 }
@@ -14,6 +18,10 @@
     max-width: 50%;
     width: 100%;
     min-height: 300px;
+}
+
+.editor__dropdown {
+    width: 180px;
 }
 
 .editor__output {
