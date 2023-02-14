@@ -2,8 +2,11 @@ import './style.css';
 import React from 'react';
 import { Checkbox, Label, Link, Stack, Text } from '@fluentui/react';
 import { languageOptions } from '../data/languages';
+import { useTranslation } from 'react-i18next';
 
 export const LanguageMenu: React.FC = () => {
+  const { t } = useTranslation();
+
   const checkboxesJsx = languageOptions.map((language) => (
     <Checkbox key={language.key} onRenderLabel={(props) => {
       if (props == null) {
@@ -11,7 +14,7 @@ export const LanguageMenu: React.FC = () => {
       }
       return (
         <Stack verticalAlign="start">
-          <Text className='language__text'>{language.text}</Text>
+          <Text className='language__text'>{t(`language.${language.key}`)}</Text>
           {<Text className='language__native'>{language.native}</Text>}
         </Stack>
       );

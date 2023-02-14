@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import './App.css';
 import { NavigationBar } from './component/NavigationBar';
 import { EditorView } from './component/EditorView';
+
+import './i18n';
 
 const App: React.FunctionComponent = () => {
   return (
@@ -12,4 +14,8 @@ const App: React.FunctionComponent = () => {
   );
 };
 
-export default App;
+export default function WrappedApp (): JSX.Element {
+  return <Suspense fallback="... is loading">
+    <App/>
+  </Suspense>;
+};
