@@ -1,7 +1,7 @@
 import './style.css';
 import React from 'react';
-import {Stack, TextField, Text, Separator, Label, PrimaryButton, Dropdown} from "@fluentui/react";
-import {LanguageMenu} from "./LanguageMenu";
+import { Stack, TextField, Text, Separator, Label, PrimaryButton } from '@fluentui/react';
+import { LanguageMenu } from './LanguageMenu';
 
 export const EditorView: React.FC = () => {
   const twoColJsx = (

@@ -1,7 +1,7 @@
 export interface LanguageOption {
-  key: string;
-  text: string;
-  native: string;
+  key: string
+  text: string
+  native: string
 }
 
 export const languageOptions: LanguageOption[] = [

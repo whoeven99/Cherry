@@ -1,6 +1,6 @@
 import './style.css';
 import React from 'react';
-import {Image, Stack, Text} from "@fluentui/react";
+import { Image, Stack, Text } from '@fluentui/react';
 
 export const NavigationBar: React.FC = () => {
   return (
