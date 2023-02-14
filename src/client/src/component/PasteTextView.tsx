@@ -3,16 +3,23 @@ import { Dropdown, Label, PrimaryButton, Stack, Text, TextField } from '@fluentu
 import { languageOptions } from '../data/languages';
 import { demoInput } from '../data/demo';
 
-export const PasteTextView: React.FC = () => {
-  const [sourceLanguage, setSourceLanguage] = React.useState('en');
+interface IProps {
+  disabled: boolean
+  sourceLangId: string
+  setSourceLangId: (langId: string) => void
+}
+
+export const PasteTextView: React.FC<IProps> = (props) => {
+  const { disabled, sourceLangId, setSourceLangId } = props;
 
   const languageDropdownJsx = (
     <Dropdown
       className='editor__dropdown'
-      selectedKey={sourceLanguage}
+      disabled={disabled}
+      selectedKey={sourceLangId}
       onChange={(event, option) => {
         if (option != null) {
-          setSourceLanguage(option.key.toString());
+          setSourceLangId(option.key.toString());
         }
       }}
       options={languageOptions}
@@ -22,10 +29,11 @@ export const PasteTextView: React.FC = () => {
   const textAreaJsx = (
     <TextField
       multiline
-      autoAdjustHeight
-      resizable={false}
+      resizable
+      rows={25}
+      disabled={disabled}
       defaultValue={demoInput}
-      rows={20} />
+    />
   );
 
   return (
