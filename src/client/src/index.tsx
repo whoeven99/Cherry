@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import { initializeIcons } from '@fluentui/react';
+import WrappedApp from './App';
 
 initializeIcons();
 
@@ -11,6 +11,6 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <WrappedApp />
   </React.StrictMode>
 );
