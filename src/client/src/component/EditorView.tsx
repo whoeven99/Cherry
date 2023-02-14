@@ -1,6 +1,6 @@
 import './style.css';
 import React from 'react';
-import { Stack, Separator, PrimaryButton } from '@fluentui/react';
+import { Stack, Separator } from '@fluentui/react';
 import { LanguageMenu } from './LanguageMenu';
 import { demoPendingRewording } from '../data/demo';
 import { PasteTextView } from './PasteTextView';
@@ -24,7 +24,6 @@ export const EditorView: React.FC = () => {
       <LanguageMenu />
       <Stack tokens={{ childrenGap: 12 }}>
         {twoColJsx}
-        <PrimaryButton text="Generate" className='editor__button' />
       </Stack>
     </Stack>
   );

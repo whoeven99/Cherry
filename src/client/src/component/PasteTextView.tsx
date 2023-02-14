@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, Label, Stack, TextField } from '@fluentui/react';
+import { Dropdown, Label, PrimaryButton, Stack, Text, TextField } from '@fluentui/react';
 import { languageOptions } from '../data/languages';
 import { demoInput } from '../data/demo';
 
@@ -29,7 +29,7 @@ export const PasteTextView: React.FC = () => {
   );
 
   return (
-    <Stack>
+    <Stack tokens={{ childrenGap: 10 }}>
       <Stack
         className='common__label'
         horizontal tokens={{ childrenGap: 8 }}>
@@ -37,6 +37,8 @@ export const PasteTextView: React.FC = () => {
         {languageDropdownJsx}
       </Stack>
       {textAreaJsx}
+      <PrimaryButton text="Generate" className='editor__button' />
+      <Text>You will see the rephrasing results on the right. Please review each item and modify as necessary. All content cannot be changed after the translation has started.</Text>
     </Stack>
   );
 };
