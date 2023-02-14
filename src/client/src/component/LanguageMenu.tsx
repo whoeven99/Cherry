@@ -20,8 +20,8 @@ export const LanguageMenu: React.FC = () => {
 
   return (
     <Stack>
-      <Stack horizontal verticalAlign='center' tokens={{ childrenGap: 8 }}>
-        <Label className='common__label'>Step 1 - Select your target languages</Label>
+      <Stack horizontal verticalAlign='center' tokens={{ childrenGap: 8 }} className='common__label'>
+        <Label>Step 1 - Select your target languages</Label>
         <Link
           href='https://support.microsoft.com/en-us/office/what-languages-is-office-available-in-26d30382-9fba-45dd-bf55-02ab03e2a7ec'
           target="_blank"
