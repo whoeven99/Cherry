@@ -8,32 +8,33 @@ import { ReviewRephraseView } from './ReviewRephraseView';
 import { ReviewTranslationTabView } from './ReviewTranslationTabView';
 import { languageOptions } from '../data/languages';
 
-export const EditorView: React.FC = () => {
+export const MainPageView: React.FC = () => {
+  const [showLangSelection, setShowLangSelection] = React.useState(false);
   const [showTranslationTab, setShowTranslationTab] = React.useState(false);
 
   const [sourceLangId, setSourceLangId] = React.useState('en');
   const [targetLangIds, setTargetLangIds] = React.useState<string[]>([]);
 
-  const startTranslation = () => {
+  const confirmRephrasing = () => {
     // remove sourceLangeId from targetLangIds
     setTargetLangIds(targetLangIds.filter((id) => id !== sourceLangId));
-    setShowTranslationTab(true);
+    setShowLangSelection(true);
   };
 
   const twoColJsx = (
     <Stack horizontal className='editor' tokens={{ childrenGap: 10 }}>
       <Stack.Item className='editor__input'>
         <PasteTextView
-          disabled={showTranslationTab}
+          disabled={showLangSelection}
           sourceLangId={sourceLangId}
           setSourceLangId={setSourceLangId} />
       </Stack.Item>
       <Separator vertical />
       <Stack.Item className='editor__input'>
         <ReviewRephraseView
-          disabled={showTranslationTab}
+          disabled={showLangSelection}
           response={demoPendingRewording}
-          startTranslation={startTranslation}
+          startTranslation={confirmRephrasing}
         />
       </Stack.Item>
     </Stack>
@@ -48,13 +49,18 @@ export const EditorView: React.FC = () => {
 
   return (
     <Stack tokens={{ childrenGap: 40 }} className='editorWrapper'>
-      <LanguageSelection
-        disabled={showTranslationTab}
-        sourceLangId={sourceLangId}
-        targetLangIds={targetLangIds}
-        setTargetLangIds={setTargetLangIds}
-      />
       {twoColJsx}
+
+      { showLangSelection && (
+        <LanguageSelection
+          disabled={showTranslationTab}
+          sourceLangId={sourceLangId}
+          targetLangIds={targetLangIds}
+          setTargetLangIds={setTargetLangIds}
+          confirmLanguages={() => { setShowTranslationTab(true); }}
+        />
+      )}
+
       {reviewSectionJsx}
     </Stack>
   );

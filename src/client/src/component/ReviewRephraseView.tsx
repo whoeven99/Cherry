@@ -1,5 +1,5 @@
 import React from 'react';
-import { Label, PrimaryButton, Stack, TextField, Text } from '@fluentui/react';
+import { Label, PrimaryButton, Stack, Text, TextField } from '@fluentui/react';
 
 interface IProps {
   disabled: boolean
@@ -22,14 +22,15 @@ export const ReviewRephraseView: React.FC<IProps> = (props) => {
 
   return (
     <Stack tokens={{ childrenGap: 10 }}>
-      <Label className='common__label'>Step 3 - Review result of rephrasing</Label>
+      <Label className='common__label'>Step 2 - Review result of rephrasing</Label>
       {textAreaJsx}
+      <Text>After you confirm the rephrasing results, you will be directed to another page to complete the translation. Once the translation is started, you will not be able to modify the inputs here.</Text>
       <PrimaryButton
         className='editor__button'
-        text="Start to translate"
+        text="Confirm & Continue"
         onClick={startTranslation}
+        disabled={disabled}
       />
-      <Text>You will be directed to another page to complete the next steps. Once the translation is started, you will not be able to modify the options on this page.</Text>
     </Stack>
   );
 };

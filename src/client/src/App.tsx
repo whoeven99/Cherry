@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import './App.css';
 import { NavigationBar } from './component/NavigationBar';
-import { EditorView } from './component/EditorView';
+import { MainPageView } from './component/MainPageView';
 
 import './i18n';
 
@@ -9,7 +9,7 @@ const App: React.FunctionComponent = () => {
   return (
     <div className="App">
       <NavigationBar />
-      <EditorView />
+      <MainPageView />
     </div>
   );
 };
