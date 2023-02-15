@@ -7,6 +7,7 @@ const { format } = require("date-fns");
 
 // 1st party dependencies
 var indexRouter = require("./routes/index");
+const { chatCall } = require("./openai");
 
 async function getApp() {
   var app = express();

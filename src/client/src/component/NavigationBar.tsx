@@ -2,13 +2,11 @@ import './style.css';
 import React, { useState } from 'react';
 import { Dropdown, type IDropdownOption, Image, Stack, Text, StackItem } from '@fluentui/react';
 import { useTranslation } from 'react-i18next';
+import { languageOptions } from '../data/languages';
 
 export const NavigationBar: React.FC = () => {
-  const options: IDropdownOption[] = [
-    { key: 'en', text: 'English' }
-    // { key: 'de', text: 'Deutsch' }
-  ];
   const { i18n } = useTranslation();
+  const options: IDropdownOption[] = languageOptions.map(lo => ({ key: lo.key, text: lo.native }));
   const [lng, setLng] = useState('en');
 
   const onChange = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption<any> | undefined): void => {
