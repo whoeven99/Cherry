@@ -30,7 +30,7 @@ export const PasteTextView: React.FC<IProps> = (props) => {
     <TextField
       multiline
       resizable
-      rows={25}
+      rows={20}
       disabled={disabled}
       defaultValue={demoInput}
     />

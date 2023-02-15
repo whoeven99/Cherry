@@ -14,20 +14,8 @@
     width: 100%;
 }
 
-.editor__input {
-    max-width: 50%;
-    width: 100%;
-    min-height: 300px;
-}
-
 .editor__dropdown {
     width: 180px;
-}
-
-.editor__output {
-    max-width: 50%;
-    width: 100%;
-    min-height: 300px;
 }
 
 .editor__button {

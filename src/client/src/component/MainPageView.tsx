@@ -1,6 +1,6 @@
 import './style.css';
 import React from 'react';
-import { Separator, Stack } from '@fluentui/react';
+import { Stack } from '@fluentui/react';
 import { LanguageSelection } from './LanguageSelection';
 import { demoInput, demoPendingRewording } from '../data/demo';
 import { PasteTextView } from './PasteTextView';
@@ -21,26 +21,6 @@ export const MainPageView: React.FC = () => {
     setShowLangSelection(true);
   };
 
-  const twoColJsx = (
-    <Stack horizontal className='editor' tokens={{ childrenGap: 10 }}>
-      <Stack.Item className='editor__input'>
-        <PasteTextView
-          disabled={showLangSelection}
-          sourceLangId={sourceLangId}
-          setSourceLangId={setSourceLangId} />
-      </Stack.Item>
-      <Separator vertical />
-      <Stack.Item className='editor__input'>
-        <ReviewRephraseView
-          disabled={showLangSelection}
-          original={demoInput}
-          rephrased={demoPendingRewording}
-          startTranslation={confirmRephrasing}
-        />
-      </Stack.Item>
-    </Stack>
-  );
-
   const selectedLanguages = languageOptions
     .filter((language) => targetLangIds.includes(language.key));
 
@@ -50,7 +30,17 @@ export const MainPageView: React.FC = () => {
 
   return (
     <Stack tokens={{ childrenGap: 40 }} className='editorWrapper'>
-      {twoColJsx}
+      <PasteTextView
+        disabled={showLangSelection}
+        sourceLangId={sourceLangId}
+        setSourceLangId={setSourceLangId} />
+
+      <ReviewRephraseView
+        disabled={showLangSelection}
+        original={demoInput}
+        rephrased={demoPendingRewording}
+        startTranslation={confirmRephrasing}
+      />
 
       { showLangSelection && (
         <LanguageSelection
