@@ -46,3 +46,16 @@
 .language__link {
     font-size: 13px;
 }
+
+.input-changed input{
+    background: rgba(83, 127, 231, 0.8);
+}
+
+.ReviewRephraseViewWrapper .ms-DetailsRow-cell {
+    display: flex;
+    align-items: center;
+}
+
+.ReviewRephraseViewWrapper .ms-TextField {
+    flex-grow: 1;
+}

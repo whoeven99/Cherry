@@ -10,7 +10,7 @@ export const demoInput: string = `"Label_Audits": "Audits",
 "Label_Evidences": "Evidences",
 "Label_AuditEventOwners": "Audit Event Owners",
 "Label_EvidenceRequest": "Evidence Request",
-"Label_ExcludeImportedEvidence": "Exclude Imported Evidence",`;
+"Label_ExcludeImportedEvidence": "Exclude Imported Evidence"`;
 
 export const demoPendingRewording: string = `"Label_Audits": "Audits",
 "Label_Auditors": "Auditors",

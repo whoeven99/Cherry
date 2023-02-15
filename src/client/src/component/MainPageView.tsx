@@ -2,7 +2,7 @@ import './style.css';
 import React from 'react';
 import { Separator, Stack } from '@fluentui/react';
 import { LanguageSelection } from './LanguageSelection';
-import { demoPendingRewording } from '../data/demo';
+import { demoInput, demoPendingRewording } from '../data/demo';
 import { PasteTextView } from './PasteTextView';
 import { ReviewRephraseView } from './ReviewRephraseView';
 import { ReviewTranslationTabView } from './ReviewTranslationTabView';
@@ -33,7 +33,8 @@ export const MainPageView: React.FC = () => {
       <Stack.Item className='editor__input'>
         <ReviewRephraseView
           disabled={showLangSelection}
-          response={demoPendingRewording}
+          original={demoInput}
+          rephrased={demoPendingRewording}
           startTranslation={confirmRephrasing}
         />
       </Stack.Item>
