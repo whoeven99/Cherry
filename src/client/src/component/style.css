@@ -14,20 +14,8 @@
     width: 100%;
 }
 
-.editor__input {
-    max-width: 50%;
-    width: 100%;
-    min-height: 300px;
-}
-
 .editor__dropdown {
     width: 180px;
-}
-
-.editor__output {
-    max-width: 50%;
-    width: 100%;
-    min-height: 300px;
 }
 
 .editor__button {
@@ -45,4 +33,17 @@
 
 .language__link {
     font-size: 13px;
+}
+
+.input-changed input{
+    background: rgba(83, 127, 231, 0.8);
+}
+
+.ReviewRephraseViewWrapper .ms-DetailsRow-cell {
+    display: flex;
+    align-items: center;
+}
+
+.ReviewRephraseViewWrapper .ms-TextField {
+    flex-grow: 1;
 }

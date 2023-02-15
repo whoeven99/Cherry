@@ -30,7 +30,7 @@ export const PasteTextView: React.FC<IProps> = (props) => {
     <TextField
       multiline
       resizable
-      rows={25}
+      rows={20}
       disabled={disabled}
       defaultValue={demoInput}
     />
@@ -41,12 +41,13 @@ export const PasteTextView: React.FC<IProps> = (props) => {
       <Stack
         className='common__label'
         horizontal tokens={{ childrenGap: 8 }}>
-        <Label>Step 2 - Paste your strings in</Label>
+        <Label>Step 1 - Paste your strings in</Label>
         {languageDropdownJsx}
       </Stack>
+
       {textAreaJsx}
-      <PrimaryButton text="Generate" className='editor__button' />
       <Text>You will see the rephrasing results on the right. Please review each item and modify as necessary. All content cannot be changed after the translation has started.</Text>
+      <PrimaryButton text="Rephrase" className='editor__button' disabled={disabled} />
     </Stack>
   );
 };

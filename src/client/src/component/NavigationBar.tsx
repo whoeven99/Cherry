@@ -1,6 +1,6 @@
 import './style.css';
 import React, { useState } from 'react';
-import { Dropdown, type IDropdownOption, Image, Stack, Text, StackItem } from '@fluentui/react';
+import { Dropdown, type IDropdownOption, Image, Stack, StackItem, Text } from '@fluentui/react';
 import { useTranslation } from 'react-i18next';
 import { languageOptions } from '../data/languages';
 
@@ -26,6 +26,7 @@ export const NavigationBar: React.FC = () => {
       </StackItem>
       <StackItem>
         <Dropdown
+          className='editor__dropdown'
           placeholder="Select an option"
           options={options}
           onChange={onChange}

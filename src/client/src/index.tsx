@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { initializeIcons } from '@fluentui/react';
 import WrappedApp from './App';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 
 initializeIcons();
 
@@ -11,6 +13,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <WrappedApp />
+    <Provider store={store}>
+      <WrappedApp />
+    </Provider>
   </React.StrictMode>
 );
