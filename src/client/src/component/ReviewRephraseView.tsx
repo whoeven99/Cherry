@@ -1,6 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Label, PrimaryButton, Stack, Text, type IColumn, DetailsList, DetailsListLayoutMode, SelectionMode, TextField } from '@fluentui/react';
+import {
+  DetailsList,
+  DetailsListLayoutMode,
+  type IColumn,
+  Label,
+  PrimaryButton,
+  SelectionMode,
+  Stack,
+  Text,
+  TextField
+} from '@fluentui/react';
 import classname from 'classnames';
+
+import { toFlattenObject } from '../utils/parse';
+import _ from 'lodash';
 interface IProps {
   disabled: boolean
   original: string
@@ -20,35 +33,18 @@ export const ReviewRephraseView: React.FC<IProps> = (props) => {
   const [rephrasedRecords, setRephrasedRecords] = useState<Record<string, unknown>>({});
 
   useEffect(() => {
-    let data: Record<string, unknown>;
-    try {
-      data = JSON.parse(original);
-    } catch {
-      try {
-        data = JSON.parse(`{${original}}`);
-      } catch {
-        data = {};
-      }
-    }
-    setOriginalRecords(data);
+    setOriginalRecords(toFlattenObject(original));
   }, [original]);
 
   useEffect(() => {
-    let data: Record<string, unknown>;
-    try {
-      data = JSON.parse(rephrased);
-    } catch {
-      try {
-        data = JSON.parse(`{${rephrased}}`);
-      } catch {
-        data = {};
-      }
-    }
-    setRephrasedRecords(data);
+    setRephrasedRecords(toFlattenObject(rephrased));
   }, [rephrased]);
 
+  if (_.isEmpty(originalRecords) || _.isEmpty(rephrasedRecords)) {
+    return <></>;
+  }
+
   const items: IRephrasedItem[] = Object.keys(rephrasedRecords).map(key => ({ keyName: key, originalValue: originalRecords[key], rephrasedValue: rephrasedRecords[key] }));
-  console.log(items);
 
   const columns: IColumn[] = [
     { key: 'keyName', name: 'Key', fieldName: 'keyName', minWidth: 100, maxWidth: 200, isResizable: true },
@@ -57,12 +53,13 @@ export const ReviewRephraseView: React.FC<IProps> = (props) => {
   ];
 
   function renderItemColumn (item: IRephrasedItem, index: number | undefined, column: IColumn | undefined) {
+    console.log(index);
     if (column != null) {
       const fieldContent = item[column.fieldName as keyof IRephrasedItem] as string;
       const className = classname({ 'input-changed': item.originalValue !== item.rephrasedValue });
       switch (column.key) {
         case 'rephrasedValue':
-          return <TextField className={className} defaultValue={fieldContent} onChange={(event, value) => { setRephrasedRecords({ ...rephrasedRecords, [item.keyName]: value }); }}/>;
+          return <TextField disabled={disabled} className={className} defaultValue={fieldContent} onChange={(event, value) => { setRephrasedRecords({ ...rephrasedRecords, [item.keyName]: value }); }}/>;
         default:
           return <span>{fieldContent}</span>;
       }
@@ -75,12 +72,7 @@ export const ReviewRephraseView: React.FC<IProps> = (props) => {
       <DetailsList
             items={items}
             columns={columns}
-            setKey="set"
-            layoutMode={DetailsListLayoutMode.justified}
-            selectionPreservedOnEmptyClick={true}
-            ariaLabelForSelectionColumn="Toggle selection"
-            ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-            checkButtonAriaLabel="select row"
+            layoutMode={DetailsListLayoutMode.fixedColumns}
             selectionMode={SelectionMode.none}
             onRenderItemColumn={renderItemColumn}
           />

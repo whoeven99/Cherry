@@ -28,22 +28,27 @@ export const languageSlice = createSlice({
     setTranslations (state, action: PayloadAction<TranslationEntry[]>) {
       translationsAdapter.setAll(state.translations, action.payload);
     },
-    addTranslation (state, action: PayloadAction<{ id: string, items: Record<string, string> }>) {
-      translationsAdapter.addOne(state.translations, action.payload);
+    updateTranslation (state, action: PayloadAction<{ keyId: string, languageId: string, text: string }>) {
+      const { keyId, languageId, text } = action.payload;
+      const translation = state.translations.entities[keyId];
+
+      if (translation != null) {
+        translation.items[languageId] = text;
+      }
     }
   }
 });
 
-export const { setSourceLanguageId, addTranslation, setTranslations } = languageSlice.actions;
+export const { setSourceLanguageId, setTranslations, updateTranslation } = languageSlice.actions;
 
 const { selectAll } = translationsAdapter.getSelectors();
 
 export const selectAllTranslationsByLanguageId = (
   state: RootState,
   languageId: string
-): Array<{ id: string, source: string, text: string }> => {
+): Array<{ keyId: string, source: string, text: string }> => {
   return selectAll(state.language.translations).map(translation => ({
-    id: translation.id,
+    keyId: translation.id,
     source: translation.items[state.language.sourceLanguageId],
     text: translation.items[languageId]
   }));
