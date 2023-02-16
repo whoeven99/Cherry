@@ -3,8 +3,8 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 export enum Stage {
   PasteSource,
   Rephrase,
-  SelectTarget,
-  TranslationReview
+  SelectTargetLanguages,
+  FinalReview
 }
 
 interface CommonSliceState {
