@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useTypedSelector } from '../app/store';
-import { translate } from '../app/api';
+import { translateAsync } from '../app/api';
 import { demoInput } from '../data/demo';
 import { ReviewList } from './ReviewList';
 
@@ -11,11 +11,11 @@ interface IProps {
 export const ReviewPerLanguage: React.FC<IProps> = (props) => {
   const { langId } = props;
 
-  const sourceText = useTypedSelector((state) => state.common.text);
+  const sourceText = useTypedSelector((state) => state.common.rephrasedText);
   const [translatedText, setTranslatedText] = React.useState<string>('');
 
   useEffect(() => {
-    translate(langId, demoInput)
+    translateAsync(langId, demoInput)
       .then((result) => {
         setTranslatedText(result.text);
       }).catch(e => {

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Stack } from '@fluentui/react';
 import { LanguageSelection } from '../component/LanguageSelection';
-import { demoInput, demoPendingRewording } from '../data/demo';
 import { PasteTextView } from '../component/PasteTextView';
 import { ReviewRephraseView } from '../component/ReviewRephraseView';
 import { ReviewTranslationTabView } from '../component/ReviewTranslationTabView';
@@ -21,13 +20,11 @@ export const MainPageView: React.FC = () => {
   return (
     <Stack tokens={{ childrenGap: 40 }} className='editorWrapper'>
       <PasteTextView
-        disabled={stage >= Stage.SelectTargetLanguages}/>
+        disabled={stage >= Stage.LoadingRephrase}/>
 
       { stage >= Stage.Rephrase && (
         <ReviewRephraseView
           disabled={stage >= Stage.SelectTargetLanguages}
-          original={demoInput}
-          rephrased={demoPendingRewording}
         />
       )}
 

@@ -1,7 +1,9 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { rephraseAsync } from '../app/api';
 
 export enum Stage {
   PasteSource,
+  LoadingRephrase,
   Rephrase,
   SelectTargetLanguages,
   FinalReview
@@ -10,15 +12,25 @@ export enum Stage {
 interface CommonSliceState {
   stage: Stage
   sourceLangId: string
-  text: string // confirmed rephrased text in source language
   targetLangIds: string[]
+  rawText: string
+  rephrasedText: string
 }
+
+export const rephrase = createAsyncThunk<string, { input: string } >(
+  'rephrase',
+  async ({ input }) => {
+    const response = await rephraseAsync(input);
+    return response.text;
+  }
+);
 
 const initialState: CommonSliceState = {
   stage: Stage.PasteSource,
   sourceLangId: 'en',
-  text: '',
-  targetLangIds: ['de', 'fr', 'es']
+  targetLangIds: ['de', 'fr', 'es'],
+  rawText: '',
+  rephrasedText: ''
 };
 
 export const commonSlice = createSlice({
@@ -31,14 +43,27 @@ export const commonSlice = createSlice({
     setSourceLangId (state, action: PayloadAction<string>) {
       state.sourceLangId = action.payload;
     },
-    completeRephrase (state, action: PayloadAction<string>) {
-      state.text = action.payload;
+    startRephrasing (state, action: PayloadAction<string>) {
       state.stage = Stage.SelectTargetLanguages;
+      state.rawText = action.payload;
     },
     setTargetLangIds (state, action: PayloadAction<string[]>) {
       state.targetLangIds = action.payload;
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(rephrase.pending, (state) => {
+        state.stage = Stage.LoadingRephrase;
+      })
+      .addCase(rephrase.fulfilled, (state, action) => {
+        state.stage = Stage.Rephrase;
+        state.rawText = action.meta.arg.input;
+        state.rephrasedText = action.payload;
+      });
   }
 });
 
-export const { setStage, setSourceLangId, completeRephrase, setTargetLangIds } = commonSlice.actions;
+export const {
+  setStage, setSourceLangId, startRephrasing, setTargetLangIds
+} = commonSlice.actions;

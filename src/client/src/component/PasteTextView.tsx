@@ -2,9 +2,8 @@ import React from 'react';
 import { Dropdown, Label, PrimaryButton, Stack, Text, TextField } from '@fluentui/react';
 import { languageOptions } from '../data/languages';
 import { demoInput } from '../data/demo';
-import { rephrase } from '../app/api';
 import { useAppDispatch, useTypedSelector } from '../app/store';
-import { setSourceLangId, setStage, Stage } from '../redux/commonSlice';
+import { rephrase, setSourceLangId, Stage } from '../redux/commonSlice';
 
 interface IProps {
   disabled: boolean
@@ -15,6 +14,7 @@ export const PasteTextView: React.FC<IProps> = (props) => {
 
   const dispatch = useAppDispatch();
 
+  const stage = useTypedSelector((state) => state.common.stage);
   const sourceLangId = useTypedSelector((state) => state.common.sourceLangId);
 
   const [input, setInput] = React.useState(demoInput);
@@ -46,10 +46,8 @@ export const PasteTextView: React.FC<IProps> = (props) => {
     />
   );
 
-  const onSubmit = async () => {
-    const response = await rephrase(input);
-    dispatch(setStage(Stage.Rephrase));
-    console.log(response);
+  const onSubmit = () => {
+    dispatch(rephrase({ input }));
   };
 
   return (
@@ -65,9 +63,9 @@ export const PasteTextView: React.FC<IProps> = (props) => {
       <Text>You will see the rephrasing results in next step. You will start translation from there.</Text>
       <PrimaryButton
         className='editor__button'
-        text="Rephrase"
+        text={stage === Stage.LoadingRephrase ? 'Rephrasing...' : 'Rephrase'}
         onClick={onSubmit}
-        disabled={disabled || input === ''} />
+        disabled={disabled || input === '' || stage === Stage.LoadingRephrase} />
     </Stack>
   );
 };
