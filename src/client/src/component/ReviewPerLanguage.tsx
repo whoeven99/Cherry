@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useTypedSelector } from '../app/store';
 import { translate } from '../app/api';
-import { ReviewRephraseView } from './ReviewRephraseView';
 import { demoInput } from '../data/demo';
+import { ReviewList } from './ReviewList';
 
 interface IProps {
   langId: string
@@ -24,7 +24,7 @@ export const ReviewPerLanguage: React.FC<IProps> = (props) => {
   }, []);
 
   return (
-    <ReviewRephraseView
+    <ReviewList
       disabled={false}
       original={sourceText}
       rephrased={translatedText}
