@@ -34,7 +34,7 @@ export const ReviewTranslationTabView: React.FC<IProps> = (props) => {
         }
       }
     ]));
-  }, []);
+  }, [dispatch]);
 
   const pivotsJsx = (
     <Pivot aria-label="Basic Pivot Example">
