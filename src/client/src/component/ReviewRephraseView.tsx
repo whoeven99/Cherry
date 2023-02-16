@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Label, PrimaryButton, Stack, Text, type IColumn, DetailsList, DetailsListLayoutMode, SelectionMode, TextField } from '@fluentui/react';
+import {
+  DetailsList,
+  DetailsListLayoutMode,
+  type IColumn,
+  Label,
+  PrimaryButton,
+  SelectionMode,
+  Stack,
+  Text,
+  TextField
+} from '@fluentui/react';
 import classname from 'classnames';
+
 import { toFlattenObject } from '../utils/parse';
 import _ from 'lodash';
 interface IProps {

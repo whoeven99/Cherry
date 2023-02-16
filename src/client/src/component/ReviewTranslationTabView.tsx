@@ -23,7 +23,17 @@ export const ReviewTranslationTabView: React.FC<IProps> = (props) => {
           zh: '你好',
           de: 'Hallo'
         }
-      }]));
+      },
+      {
+        id: 'label.goodbye',
+        items: {
+          en: 'Goodbye',
+          fr: 'Au revoir',
+          zh: '再见',
+          de: 'Auf Wiedersehen'
+        }
+      }
+    ]));
   }, []);
 
   const pivotsJsx = (

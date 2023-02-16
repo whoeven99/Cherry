@@ -1,24 +1,25 @@
 import React from 'react';
-import { DetailsList, type IColumn, SelectionMode } from '@fluentui/react';
+import { DetailsList, type IColumn, SelectionMode, TextField } from '@fluentui/react';
 
 interface TranslationItem {
-  id: string
+  keyId: string
   source: string
   target: string
 }
 
 interface IProps {
   items: TranslationItem[]
+  onChange: (keyId: string, value: string) => void
 }
 
 export const ItemReviewList: React.FC<IProps> = (props) => {
-  const { items } = props;
+  const { items, onChange } = props;
 
   const columns: IColumn[] = [
     {
-      key: 'id',
+      key: 'keyId',
       name: 'ID',
-      fieldName: 'id',
+      fieldName: 'keyId',
       isResizable: true,
       minWidth: 200,
       maxWidth: 300
@@ -36,7 +37,10 @@ export const ItemReviewList: React.FC<IProps> = (props) => {
       fieldName: 'target',
       isResizable: true,
       minWidth: 300,
-      maxWidth: 500
+      maxWidth: 500,
+      onRender: (item: TranslationItem) => {
+        return <TextField value={item.target} onChange={(e, v) => { onChange(item.keyId, v ?? ''); }} />;
+      }
     }
   ];
 

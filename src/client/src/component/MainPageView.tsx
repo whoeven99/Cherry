@@ -13,7 +13,7 @@ export const MainPageView: React.FC = () => {
   const [showTranslationTab, setShowTranslationTab] = React.useState(false);
 
   const [sourceLangId, setSourceLangId] = React.useState('en');
-  const [targetLangIds, setTargetLangIds] = React.useState<string[]>([]);
+  const [targetLangIds, setTargetLangIds] = React.useState<string[]>(['fr', 'zh', 'de']);
 
   const confirmRephrasing = () => {
     // remove sourceLangeId from targetLangIds
