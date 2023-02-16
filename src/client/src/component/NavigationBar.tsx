@@ -1,4 +1,3 @@
-import './style.css';
 import React, { useState } from 'react';
 import { Dropdown, type IDropdownOption, Image, Stack, StackItem, Text } from '@fluentui/react';
 import { useTranslation } from 'react-i18next';

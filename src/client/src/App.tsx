@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import './App.css';
 import { NavigationBar } from './component/NavigationBar';
-import { MainPageView } from './component/MainPageView';
+import { MainPageView } from './page/MainPageView';
 
 import './i18n';
 

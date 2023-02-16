@@ -1,11 +1,10 @@
-import './style.css';
 import React from 'react';
 import { Stack } from '@fluentui/react';
-import { LanguageSelection } from './LanguageSelection';
+import { LanguageSelection } from '../component/LanguageSelection';
 import { demoInput, demoPendingRewording } from '../data/demo';
-import { PasteTextView } from './PasteTextView';
-import { ReviewRephraseView } from './ReviewRephraseView';
-import { ReviewTranslationTabView } from './ReviewTranslationTabView';
+import { PasteTextView } from '../component/PasteTextView';
+import { ReviewRephraseView } from '../component/ReviewRephraseView';
+import { ReviewTranslationTabView } from '../component/ReviewTranslationTabView';
 import { languageOptions } from '../data/languages';
 import { useAppDispatch, useTypedSelector } from '../app/store';
 import { setStage, Stage } from '../redux/commonSlice';

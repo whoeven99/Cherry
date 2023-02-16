@@ -1,4 +1,3 @@
-import './style.css';
 import React from 'react';
 import { Checkbox, Label, Link, PrimaryButton, Stack, Text } from '@fluentui/react';
 import { languageOptions } from '../data/languages';
