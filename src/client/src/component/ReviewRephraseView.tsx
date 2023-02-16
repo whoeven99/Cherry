@@ -14,12 +14,13 @@ import classname from 'classnames';
 
 import { toFlattenObject } from '../utils/parse';
 import _ from 'lodash';
+import { completeRephrase } from '../redux/commonSlice';
+import { useAppDispatch } from '../app/store';
 
 interface IProps {
   disabled: boolean
   original: string
   rephrased: string
-  startTranslation: () => void
 }
 
 interface IRephrasedItem {
@@ -29,7 +30,9 @@ interface IRephrasedItem {
 }
 
 export const ReviewRephraseView: React.FC<IProps> = (props) => {
-  const { original, startTranslation, rephrased, disabled } = props;
+  const { original, rephrased, disabled } = props;
+
+  const dispatch = useAppDispatch();
 
   const [originalRecords, setOriginalRecords] = useState<Record<string, unknown>>({});
   const [rephrasedRecords, setRephrasedRecords] = useState<Record<string, unknown>>({});
@@ -67,6 +70,10 @@ export const ReviewRephraseView: React.FC<IProps> = (props) => {
       }
     }
   }
+
+  const startTranslation = () => {
+    dispatch(completeRephrase(rephrased));
+  };
 
   return (
     <Stack tokens={{ childrenGap: 10 }} className='ReviewRephraseViewWrapper'>

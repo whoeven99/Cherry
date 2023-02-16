@@ -14,52 +14,36 @@ export const MainPageView: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const stage = useTypedSelector(state => state.common.stage);
-
-  const [sourceLangId, setSourceLangId] = React.useState('en');
-  const [targetLangIds, setTargetLangIds] = React.useState<string[]>(['fr', 'zh', 'de']);
-
-  const confirmRephrasing = () => {
-    // remove sourceLangeId from targetLangIds
-    setTargetLangIds(targetLangIds.filter((id) => id !== sourceLangId));
-    dispatch(setStage(Stage.SelectTargetLanguages));
-  };
+  const targetLangIds = useTypedSelector(state => state.common.targetLangIds);
 
   const selectedLanguages = languageOptions
     .filter((language) => targetLangIds.includes(language.key));
 
-  const reviewSectionJsx = (stage >= Stage.FinalReview &&
-      <ReviewTranslationTabView selectedLanguages={selectedLanguages} />
-  );
-
   return (
     <Stack tokens={{ childrenGap: 40 }} className='editorWrapper'>
       <PasteTextView
-        disabled={stage >= Stage.SelectTargetLanguages}
-        sourceLangId={sourceLangId}
-        setSourceLangId={setSourceLangId} />
+        disabled={stage >= Stage.SelectTargetLanguages}/>
 
       { stage >= Stage.Rephrase && (
         <ReviewRephraseView
           disabled={stage >= Stage.SelectTargetLanguages}
           original={demoInput}
           rephrased={demoPendingRewording}
-          startTranslation={confirmRephrasing}
         />
       )}
 
       { stage >= Stage.SelectTargetLanguages && (
         <LanguageSelection
           disabled={stage >= Stage.FinalReview}
-          sourceLangId={sourceLangId}
-          targetLangIds={targetLangIds}
-          setTargetLangIds={setTargetLangIds}
           confirmLanguages={() => {
             dispatch(setStage(Stage.FinalReview));
           }}
         />
       )}
 
-      {reviewSectionJsx}
+      {(stage >= Stage.FinalReview &&
+          <ReviewTranslationTabView selectedLanguages={selectedLanguages} />
+      )}
     </Stack>
   );
 };

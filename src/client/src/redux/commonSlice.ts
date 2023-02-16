@@ -8,13 +8,17 @@ export enum Stage {
 }
 
 interface CommonSliceState {
-  sourceLangId: string
   stage: Stage
+  sourceLangId: string
+  text: string // confirmed rephrased text in source language
+  targetLangIds: string[]
 }
 
 const initialState: CommonSliceState = {
+  stage: Stage.PasteSource,
   sourceLangId: 'en',
-  stage: Stage.PasteSource
+  text: '',
+  targetLangIds: ['de', 'fr', 'es']
 };
 
 export const commonSlice = createSlice({
@@ -26,8 +30,15 @@ export const commonSlice = createSlice({
     },
     setSourceLangId (state, action: PayloadAction<string>) {
       state.sourceLangId = action.payload;
+    },
+    completeRephrase (state, action: PayloadAction<string>) {
+      state.text = action.payload;
+      state.stage = Stage.SelectTargetLanguages;
+    },
+    setTargetLangIds (state, action: PayloadAction<string[]>) {
+      state.targetLangIds = action.payload;
     }
   }
 });
 
-export const { setStage, setSourceLangId } = commonSlice.actions;
+export const { setStage, setSourceLangId, completeRephrase, setTargetLangIds } = commonSlice.actions;

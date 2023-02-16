@@ -3,19 +3,19 @@ import { Dropdown, Label, PrimaryButton, Stack, Text, TextField } from '@fluentu
 import { languageOptions } from '../data/languages';
 import { demoInput } from '../data/demo';
 import { rephrase } from '../app/api';
-import { useAppDispatch } from '../app/store';
-import { setStage, Stage } from '../redux/commonSlice';
+import { useAppDispatch, useTypedSelector } from '../app/store';
+import { setSourceLangId, setStage, Stage } from '../redux/commonSlice';
 
 interface IProps {
   disabled: boolean
-  sourceLangId: string
-  setSourceLangId: (langId: string) => void
 }
 
 export const PasteTextView: React.FC<IProps> = (props) => {
-  const { disabled, sourceLangId, setSourceLangId } = props;
+  const { disabled } = props;
 
   const dispatch = useAppDispatch();
+
+  const sourceLangId = useTypedSelector((state) => state.common.sourceLangId);
 
   const [input, setInput] = React.useState(demoInput);
 
@@ -26,7 +26,7 @@ export const PasteTextView: React.FC<IProps> = (props) => {
       selectedKey={sourceLangId}
       onChange={(event, option) => {
         if (option != null) {
-          setSourceLangId(option.key.toString());
+          dispatch(setSourceLangId(option.key.toString()));
         }
       }}
       options={languageOptions}
