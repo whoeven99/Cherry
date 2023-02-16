@@ -14,6 +14,7 @@ import classname from 'classnames';
 
 import { toFlattenObject } from '../utils/parse';
 import _ from 'lodash';
+
 interface IProps {
   disabled: boolean
   original: string
@@ -29,6 +30,7 @@ interface IRephrasedItem {
 
 export const ReviewRephraseView: React.FC<IProps> = (props) => {
   const { original, startTranslation, rephrased, disabled } = props;
+
   const [originalRecords, setOriginalRecords] = useState<Record<string, unknown>>({});
   const [rephrasedRecords, setRephrasedRecords] = useState<Record<string, unknown>>({});
 
@@ -76,7 +78,7 @@ export const ReviewRephraseView: React.FC<IProps> = (props) => {
             selectionMode={SelectionMode.none}
             onRenderItemColumn={renderItemColumn}
           />
-      <Text>After you confirm the rephrasing results, you will be directed to another page to complete the translation. Once the translation is started, you will not be able to modify the inputs here.</Text>
+      <Text>Once the translation is started, you will not be able to modify the inputs above.</Text>
       <PrimaryButton
         className='editor__button'
         text="Confirm & Continue"

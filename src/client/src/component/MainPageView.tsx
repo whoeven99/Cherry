@@ -7,8 +7,12 @@ import { PasteTextView } from './PasteTextView';
 import { ReviewRephraseView } from './ReviewRephraseView';
 import { ReviewTranslationTabView } from './ReviewTranslationTabView';
 import { languageOptions } from '../data/languages';
+import { useTypedSelector } from '../app/store';
+import { Stage } from '../redux/commonSlice';
 
 export const MainPageView: React.FC = () => {
+  const stage = useTypedSelector(state => state.common.stage);
+
   const [showLangSelection, setShowLangSelection] = React.useState(false);
   const [showTranslationTab, setShowTranslationTab] = React.useState(false);
 
@@ -35,12 +39,14 @@ export const MainPageView: React.FC = () => {
         sourceLangId={sourceLangId}
         setSourceLangId={setSourceLangId} />
 
-      <ReviewRephraseView
-        disabled={showLangSelection}
-        original={demoInput}
-        rephrased={demoPendingRewording}
-        startTranslation={confirmRephrasing}
-      />
+      { stage >= Stage.Rephrase && (
+        <ReviewRephraseView
+          disabled={showLangSelection}
+          original={demoInput}
+          rephrased={demoPendingRewording}
+          startTranslation={confirmRephrasing}
+        />
+      )}
 
       { showLangSelection && (
         <LanguageSelection

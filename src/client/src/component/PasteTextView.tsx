@@ -2,6 +2,9 @@ import React from 'react';
 import { Dropdown, Label, PrimaryButton, Stack, Text, TextField } from '@fluentui/react';
 import { languageOptions } from '../data/languages';
 import { demoInput } from '../data/demo';
+import { rephrase } from '../app/api';
+import { useAppDispatch } from '../app/store';
+import { setStage, Stage } from '../redux/commonSlice';
 
 interface IProps {
   disabled: boolean
@@ -11,6 +14,10 @@ interface IProps {
 
 export const PasteTextView: React.FC<IProps> = (props) => {
   const { disabled, sourceLangId, setSourceLangId } = props;
+
+  const dispatch = useAppDispatch();
+
+  const [input, setInput] = React.useState(demoInput);
 
   const languageDropdownJsx = (
     <Dropdown
@@ -32,9 +39,18 @@ export const PasteTextView: React.FC<IProps> = (props) => {
       resizable
       rows={20}
       disabled={disabled}
-      defaultValue={demoInput}
+      value={input}
+      onChange={(event, newValue) => {
+        setInput(newValue ?? '');
+      }}
     />
   );
+
+  const onSubmit = async () => {
+    const response = await rephrase(input);
+    dispatch(setStage(Stage.Rephrase));
+    console.log(response);
+  };
 
   return (
     <Stack tokens={{ childrenGap: 10 }}>
@@ -46,8 +62,12 @@ export const PasteTextView: React.FC<IProps> = (props) => {
       </Stack>
 
       {textAreaJsx}
-      <Text>You will see the rephrasing results on the right. Please review each item and modify as necessary. All content cannot be changed after the translation has started.</Text>
-      <PrimaryButton text="Rephrase" className='editor__button' disabled={disabled} />
+      <Text>You will see the rephrasing results in next step. You will start translation from there.</Text>
+      <PrimaryButton
+        className='editor__button'
+        text="Rephrase"
+        onClick={onSubmit}
+        disabled={disabled || input === ''} />
     </Stack>
   );
 };

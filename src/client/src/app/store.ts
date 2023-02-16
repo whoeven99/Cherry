@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { languageSlice } from '../redux/languageSlice';
 import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { commonSlice } from '../redux/commonSlice';
 
 export const store = configureStore({
   reducer: {
+    common: commonSlice.reducer,
     language: languageSlice.reducer
   }
 });
