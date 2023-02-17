@@ -6,50 +6,40 @@ import classname from 'classnames';
 
 interface IProps {
   disabled: boolean
-  original: string
-  rephrased: string
+  original: Record<string, unknown>
+  inReview: Record<string, unknown>
+  onChange: (key: string, value: string) => void
 }
 
 interface IRephrasedItem {
   keyName: string
   originalValue: unknown
-  rephrasedValue: unknown
+  inReviewValue: unknown
 }
 
 export const ReviewList: React.FC<IProps> = (props) => {
-  const { disabled, original, rephrased } = props;
+  const { disabled, original: originalRecords, inReview: inReviewRecords, onChange } = props;
 
-  const [originalRecords, setOriginalRecords] = useState<Record<string, unknown>>({});
-  const [rephrasedRecords, setRephrasedRecords] = useState<Record<string, unknown>>({});
-
-  useEffect(() => {
-    setOriginalRecords(toFlattenObject(original));
-  }, [original]);
-
-  useEffect(() => {
-    setRephrasedRecords(toFlattenObject(rephrased));
-  }, [rephrased]);
-
-  if (_.isEmpty(originalRecords) || _.isEmpty(rephrasedRecords)) {
+  if (_.isEmpty(originalRecords) || _.isEmpty(inReviewRecords)) {
     return <></>;
   }
 
-  const items: IRephrasedItem[] = Object.keys(rephrasedRecords).map(key => ({ keyName: key, originalValue: originalRecords[key], rephrasedValue: rephrasedRecords[key] }));
+  const items: IRephrasedItem[] = Object.keys(inReviewRecords).map(key => ({ keyName: key, originalValue: originalRecords[key], inReviewValue: inReviewRecords[key] }));
 
   const columns: IColumn[] = [
     { key: 'keyName', name: 'Key', fieldName: 'keyName', minWidth: 200, maxWidth: 300, isResizable: true },
     { key: 'originalValue', name: 'Original Value', fieldName: 'originalValue', minWidth: 200, maxWidth: 300, isResizable: true },
-    { key: 'rephrasedValue', name: 'Rephrased Value', fieldName: 'rephrasedValue', minWidth: 200, maxWidth: 300, isResizable: true }
+    { key: 'inReviewValue', name: 'In Review Value', fieldName: 'inReviewValue', minWidth: 200, maxWidth: 300, isResizable: true }
   ];
 
   function renderItemColumn (item: IRephrasedItem, index: number | undefined, column: IColumn | undefined) {
     console.log(index);
     if (column != null) {
       const fieldContent = item[column.fieldName as keyof IRephrasedItem] as string;
-      const className = classname({ 'input-changed': item.originalValue !== item.rephrasedValue });
+      const className = classname({ 'input-changed': item.originalValue !== item.inReviewValue });
       switch (column.key) {
-        case 'rephrasedValue':
-          return <TextField disabled={disabled} className={className} defaultValue={fieldContent} onChange={(event, value) => { setRephrasedRecords({ ...rephrasedRecords, [item.keyName]: value }); }}/>;
+        case 'inReviewValue':
+          return <TextField disabled={disabled} className={className} defaultValue={fieldContent} onChange={(event, value) => { onChange(item.keyName, value ?? ''); }}/>;
         default:
           return <span>{fieldContent}</span>;
       }

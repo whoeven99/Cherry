@@ -4,6 +4,7 @@ import { languageOptions } from '../data/languages';
 import { demoInput } from '../data/demo';
 import { useAppDispatch, useTypedSelector } from '../app/store';
 import { rephrase, setSourceLangId, Stage } from '../redux/commonSlice';
+import { toFlattenObject } from '../utils/parse';
 
 interface IProps {
   disabled: boolean
@@ -47,7 +48,7 @@ export const PasteTextView: React.FC<IProps> = (props) => {
   );
 
   const onSubmit = () => {
-    dispatch(rephrase({ input }));
+    dispatch(rephrase({ input: JSON.stringify(toFlattenObject(input)).slice(1).slice(0, -1) }));
   };
 
   return (

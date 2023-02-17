@@ -56,5 +56,8 @@
         "uk": "Ukrainian",
         "vi": "Vietnamese",
         "cy": "Welsh"
+    },
+    "button": {
+        "export": "Export"
     }
 }

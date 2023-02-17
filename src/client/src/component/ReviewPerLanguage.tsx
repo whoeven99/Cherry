@@ -3,6 +3,10 @@ import { useTypedSelector } from '../app/store';
 import { translateAsync } from '../app/api';
 import { demoInput } from '../data/demo';
 import { ReviewList } from './ReviewList';
+import { PrimaryButton } from '@fluentui/react';
+import { useTranslation } from 'react-i18next';
+import { saveLocaleFiles } from '../utils/saveFile';
+import { toFlattenObject, toLocalizationString } from '../utils/parse';
 
 interface IProps {
   langId: string
@@ -10,24 +14,40 @@ interface IProps {
 
 export const ReviewPerLanguage: React.FC<IProps> = (props) => {
   const { langId } = props;
+  const { t } = useTranslation();
 
   const sourceText = useTypedSelector((state) => state.common.rephrasedText);
-  const [translatedText, setTranslatedText] = React.useState<string>('');
+  const [translatedRecords, setTranslatedRecords] = React.useState<Record<string, string>>({});
 
   useEffect(() => {
-    translateAsync(langId, demoInput)
+    translateAsync(langId, sourceText)
       .then((result) => {
-        setTranslatedText(result.text);
+        setTranslatedRecords(toFlattenObject(result.text));
       }).catch(e => {
         console.log(e);
       });
   }, []);
 
+  const originalRecords = toFlattenObject(sourceText);
+
+  const onExport = () => {
+    saveLocaleFiles(langId, toLocalizationString(translatedRecords, '.'));
+  };
+
   return (
-    <ReviewList
-      disabled={false}
-      original={sourceText}
-      rephrased={translatedText}
-    />
+    <>
+      <ReviewList
+        disabled={false}
+        original={originalRecords}
+        inReview={translatedRecords}
+        onChange={(key, value) => { setTranslatedRecords({ ...translatedRecords, [key]: value }); }}
+      />
+      <PrimaryButton
+        className='editor__button'
+        text={t('button.export') ?? ''}
+        onClick={onExport}
+      />
+    </>
+
   );
 };
