@@ -47,12 +47,18 @@ export const LanguageSelection: React.FC<IProps> = (props) => {
   );
 
   const labelJsx = (
-    <Stack horizontal verticalAlign='center' tokens={{ childrenGap: 8 }} className='common__label'>
-      <Label>{t('label.step3')}</Label>
-      <Link
-        href='https://support.microsoft.com/en-us/office/what-languages-is-office-available-in-26d30382-9fba-45dd-bf55-02ab03e2a7ec'
-        target="_blank"
-        className='language__link'>{t('label.learnMore')}</Link>
+    <Stack horizontal verticalAlign='center' tokens={{ childrenGap: 8 }} className='common__label' horizontalAlign='space-between'>
+      <Stack.Item>
+        <Label>{t('label.step3')}</Label>
+        <Link
+          href='https://support.microsoft.com/en-us/office/what-languages-is-office-available-in-26d30382-9fba-45dd-bf55-02ab03e2a7ec'
+          target="_blank"
+          className='language__link'>{t('label.learnMore')}</Link>
+      </Stack.Item>
+      <Stack.Item>
+        {t('label.selectedLanguages', { count: targetLangIds.length, total: languageOptions.length })}
+      </Stack.Item>
+
     </Stack>
   );
 
