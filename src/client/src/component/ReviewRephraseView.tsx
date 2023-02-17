@@ -6,6 +6,7 @@ import { startRephrasing } from '../redux/commonSlice';
 import { toFlattenObject } from '../utils/parse';
 import { rephraseAsync } from '../app/api';
 import _ from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   disabled: boolean
@@ -21,17 +22,13 @@ export const ReviewRephraseView: React.FC<IProps> = (props) => {
 
   const [rephrasedRecords, setRephrasedRecords] = useState<Record<string, string>>({});
 
+  const { t } = useTranslation();
+
   const originalRecords = toFlattenObject(rawText);
 
   useEffect(() => {
     setRephrasedRecords(toFlattenObject(rephrasedText));
   }, [rephrasedText]);
-
-  // useEffect(() => {
-  //   if (!_.isEmpty(rawText)) {
-  //     rephraseAsync(rawText).then(result => { setRephrasedRecords(toFlattenObject(result.text)); }).catch(e => { console.log(e); });
-  //   }
-  // }, [rawText]);
 
   const onStart = () => {
     console.log(rephrasedRecords);
@@ -40,7 +37,7 @@ export const ReviewRephraseView: React.FC<IProps> = (props) => {
 
   return (
     <Stack tokens={{ childrenGap: 10 }} className='ReviewRephraseViewWrapper'>
-      <Label className='common__label'>Step 2 - Review rephrasing results</Label>
+      <Label className='common__label'>{t('label.step2Instruction')}</Label>
 
       <ReviewList
         disabled={disabled}
@@ -49,11 +46,11 @@ export const ReviewRephraseView: React.FC<IProps> = (props) => {
         onChange={(key, value) => { setRephrasedRecords({ ...rephrasedRecords, [key]: value }); }}
       />
 
-      <Text>Once the translation is started, you will not be able to modify the inputs above.</Text>
+      <Text>{t('label.step2Explanation')}</Text>
 
       <PrimaryButton
         className='editor__button'
-        text="Confirm & Continue"
+        text={t('button.confirmAndContinue') ?? ''}
         onClick={onStart}
         disabled={disabled}
       />

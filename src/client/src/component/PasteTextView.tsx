@@ -5,7 +5,7 @@ import { demoInput } from '../data/demo';
 import { useAppDispatch, useTypedSelector } from '../app/store';
 import { rephrase, setSourceLangId, Stage } from '../redux/commonSlice';
 import { toFlattenObject } from '../utils/parse';
-
+import { useTranslation } from 'react-i18next';
 interface IProps {
   disabled: boolean
 }
@@ -19,6 +19,7 @@ export const PasteTextView: React.FC<IProps> = (props) => {
   const sourceLangId = useTypedSelector((state) => state.common.sourceLangId);
 
   const [input, setInput] = React.useState(demoInput);
+  const { t } = useTranslation();
 
   const languageDropdownJsx = (
     <Dropdown
@@ -56,15 +57,15 @@ export const PasteTextView: React.FC<IProps> = (props) => {
       <Stack
         className='common__label'
         horizontal tokens={{ childrenGap: 8 }}>
-        <Label>Step 1 - Paste your strings in</Label>
+        <Label>{t('label.step1Instruction')}</Label>
         {languageDropdownJsx}
       </Stack>
 
       {textAreaJsx}
-      <Text>You will see the rephrasing results in next step. You will start translation from there.</Text>
+      <Text>{t('label.step1Explanation')}</Text>
       <PrimaryButton
         className='editor__button'
-        text={stage === Stage.LoadingRephrase ? 'Rephrasing...' : 'Rephrase'}
+        text={(stage === Stage.LoadingRephrase ? t('button.rephrasing') : t('button.rephrase')) ?? ''}
         onClick={onSubmit}
         disabled={disabled || input === '' || stage === Stage.LoadingRephrase} />
     </Stack>

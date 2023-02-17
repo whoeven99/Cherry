@@ -58,6 +58,20 @@
         "cy": "Welsh"
     },
     "button": {
-        "export": "Export"
+        "export": "Export",
+        "rephrasing": "Rephrasing...",
+        "rephrase": "Rephrase",
+        "confirmAndContinue": "Confirm & Continue",
+        "translating": "Translation started",
+        "startTranslation": "Start translation"
+    },
+    "label": {
+        "step1Instruction": "Step 1 - Paste your strings and select language:",
+        "step1Explanation": "You will see the rephrasing results in next step. You will start translation from there.",
+        "step2Instruction": "Step 2 - Review rephrasing results",
+        "step2Explanation": "Once the translation is started, you will not be able to modify the inputs above.",
+        "step3": "Step 3 - Select your target languages",
+        "learnMore": "Learn more",
+        "step4": "Step 4 - Review translation"
     }
 }

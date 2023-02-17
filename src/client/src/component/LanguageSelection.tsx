@@ -48,11 +48,11 @@ export const LanguageSelection: React.FC<IProps> = (props) => {
 
   const labelJsx = (
     <Stack horizontal verticalAlign='center' tokens={{ childrenGap: 8 }} className='common__label'>
-      <Label>Step 3 - Select your target languages</Label>
+      <Label>{t('label.step3')}</Label>
       <Link
         href='https://support.microsoft.com/en-us/office/what-languages-is-office-available-in-26d30382-9fba-45dd-bf55-02ab03e2a7ec'
         target="_blank"
-        className='language__link'>Learn more</Link>
+        className='language__link'>{t('label.learnMore')}</Link>
     </Stack>
   );
 
@@ -64,7 +64,7 @@ export const LanguageSelection: React.FC<IProps> = (props) => {
       </Stack>
       <PrimaryButton
         className='editor__button'
-        text={disabled ? 'Translation started' : 'Start translation'}
+        text={(disabled ? t('button.translating') : t('button.startTranslation')) ?? ''}
         onClick={confirmLanguages}
         disabled={disabled}
       />
