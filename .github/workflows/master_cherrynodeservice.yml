@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - cherryservice
+name: Build and deploy Node.js app to Azure Web App - cherrynodeservice
 
 on:
   push:
@@ -24,8 +24,6 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm run postinstall --if-present
-          npm run prebuild --if-present
           npm run build --if-present
           npm run test --if-present
 
@@ -52,7 +50,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'cherryservice'
+          app-name: 'cherrynodeservice'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_82C2F427EDDA4BF784EF04AC5AA33859 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_95ACA6378FDB46A2BE23EE2AD2214357 }}
           package: .

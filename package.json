@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "postinstall": "cd ./src/client && npm install",
+    "prebuild": "cd ./src/client && npm run build && rm -rf node_modules"
   },
   "dependencies": {
     "@azure/identity": "^2.0.4",

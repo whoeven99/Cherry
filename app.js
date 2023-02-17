@@ -9,7 +9,6 @@ const { format } = require("date-fns");
 
 // 1st party dependencies
 var indexRouter = require("./routes/index");
-var testRouter = require("./routes/testapi");
 
 const { chatCall } = require("./openai");
 
@@ -32,7 +31,6 @@ async function getApp() {
   app.locals.format = format;
 
   app.use("/", indexRouter);
-  app.use("/testapi", testRouter);
   app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js")); // redirect bootstrap JS
   app.use(
     "/css",
