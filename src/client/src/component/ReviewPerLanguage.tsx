@@ -1,28 +1,33 @@
-import React from 'react';
-import { ItemReviewList } from './ItemReviewList';
-import { selectAllTranslationsByLanguageId, updateTranslation } from '../redux/languageSlice';
-import { useAppDispatch, useTypedSelector } from '../app/store';
+import React, { useEffect } from 'react';
+import { useTypedSelector } from '../app/store';
+import { translateAsync } from '../app/api';
+import { demoInput } from '../data/demo';
+import { ReviewList } from './ReviewList';
 
 interface IProps {
   langId: string
 }
 
 export const ReviewPerLanguage: React.FC<IProps> = (props) => {
-  const dispatch = useAppDispatch();
-  const allTranslations = useTypedSelector(state => selectAllTranslationsByLanguageId(state, props.langId));
+  const { langId } = props;
 
-  const allItems = allTranslations.map(t => ({
-    keyId: t.keyId,
-    source: t.source,
-    target: t.text
-  }));
+  const sourceText = useTypedSelector((state) => state.common.rephrasedText);
+  const [translatedText, setTranslatedText] = React.useState<string>('');
 
-  const onChange = (keyId: string, value: string) => {
-    dispatch(updateTranslation({ keyId, languageId: props.langId, text: value }));
-  };
+  useEffect(() => {
+    translateAsync(langId, demoInput)
+      .then((result) => {
+        setTranslatedText(result.text);
+      }).catch(e => {
+        console.log(e);
+      });
+  }, []);
 
   return (
-    <ItemReviewList items={allItems} onChange={onChange} />
-
+    <ReviewList
+      disabled={false}
+      original={sourceText}
+      rephrased={translatedText}
+    />
   );
 };

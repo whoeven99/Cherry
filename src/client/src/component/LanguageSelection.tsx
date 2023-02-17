@@ -1,31 +1,30 @@
-import './style.css';
 import React from 'react';
 import { Checkbox, Label, Link, PrimaryButton, Stack, Text } from '@fluentui/react';
 import { languageOptions } from '../data/languages';
 import { useTranslation } from 'react-i18next';
+import { useAppDispatch, useTypedSelector } from '../app/store';
+import { setTargetLangIds } from '../redux/commonSlice';
 
 interface IProps {
   disabled: boolean
-  sourceLangId: string
-  targetLangIds: string[]
-  setTargetLangIds: (ids: string[]) => void
   confirmLanguages: () => void
 }
 
 export const LanguageSelection: React.FC<IProps> = (props) => {
-  const { disabled, sourceLangId, targetLangIds, setTargetLangIds, confirmLanguages } = props;
+  const { disabled, confirmLanguages } = props;
 
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
+  const sourceLangId = useTypedSelector(state => state.common.sourceLangId);
+  const targetLangIds = useTypedSelector(state => state.common.targetLangIds);
 
   const checkboxesJsx = (
     <Stack horizontal wrap tokens={{ childrenGap: '6 0' }}>
       {languageOptions.map((language) => {
         const onChange = (checked: boolean) => {
-          if (checked) {
-            setTargetLangIds([...targetLangIds, language.key]);
-          } else {
-            setTargetLangIds(targetLangIds.filter((id) => id !== language.key));
-          }
+          const newIds = checked ? [...targetLangIds, language.key] : targetLangIds.filter((id) => id !== language.key);
+          dispatch(setTargetLangIds(newIds));
         };
 
         const onRenderLabel = () => (

@@ -2,3 +2,56 @@
     padding-bottom: 60px;
 }
 
+.App-navigation {
+    padding: 20px;
+}
+
+.common__label {
+    height: 32px;
+}
+
+.editorWrapper {
+    padding: 0 80px;
+}
+
+.editor {
+    width: 100%;
+}
+
+.editor__dropdown {
+    width: 180px;
+}
+
+.editor__button {
+    width: fit-content;
+}
+
+.language__text {
+    width: 140px;
+}
+
+.language__native {
+    font-size: 11px;
+    color: #999;
+}
+
+.language__link {
+    font-size: 13px;
+}
+
+.input-changed input{
+    background: rgba(255, 213, 170, 0.8);
+}
+
+.ms-DetailsHeader {
+    padding-top: 0;
+}
+
+.ms-DetailsRow-cell {
+    display: flex;
+    align-items: center;
+}
+
+.ms-TextField {
+    flex-grow: 1;
+}
