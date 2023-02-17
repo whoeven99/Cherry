@@ -20,7 +20,7 @@ export const ReviewPerLanguage: React.FC<IProps> = (props) => {
   const [translatedRecords, setTranslatedRecords] = React.useState<Record<string, string>>({});
 
   useEffect(() => {
-    translateAsync(langId, demoInput)
+    translateAsync(langId, sourceText)
       .then((result) => {
         setTranslatedRecords(toFlattenObject(result.text));
       }).catch(e => {

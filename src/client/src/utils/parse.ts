@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import * as _ from 'lodash';
 
-export const toFlattenObject = (content: string): Record<string, string> => {
+export const toFlattenObject = (content: string, delimiter = '.'): Record<string, string> => {
   let object: Record<string, unknown>;
   try {
     object = JSON.parse(content);
@@ -13,25 +13,25 @@ export const toFlattenObject = (content: string): Record<string, string> => {
     }
   }
 
-  return flatten(object);
+  return flatten(object, delimiter);
 };
 
-const flatten = (object: Record<string, unknown>): Record<string, string> => {
+const flatten = (object: Record<string, unknown>, delimiter: string): Record<string, string> => {
   const res: Record<string, string> = {};
   Object.keys(object).forEach(key => {
     if (typeof object[key] === 'string') {
       res[key] = object[key] as string;
     } else if (_.isPlainObject(object[key])) {
-      const tmp = flatten(object[key] as Record<string, unknown>);
+      const tmp = flatten(object[key] as Record<string, unknown>, delimiter);
       Object.keys(tmp).forEach(tmpKey => {
-        res[`${key}/${tmpKey}`] = tmp[tmpKey];
+        res[`${key}${delimiter}${tmpKey}`] = tmp[tmpKey];
       });
     }
   });
   return res;
 };
 
-export const toLocalizationString = (record: Record<string, string>, delimiter = '/'): string => {
+export const toLocalizationString = (record: Record<string, string>, delimiter = '.'): string => {
   const res: Record<string, unknown> = {};
   Object.keys(record).forEach(key => {
     const path = key.split(delimiter);
