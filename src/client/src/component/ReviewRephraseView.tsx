@@ -1,86 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import {
-  DetailsList,
-  DetailsListLayoutMode,
-  type IColumn,
-  Label,
-  PrimaryButton,
-  SelectionMode,
-  Stack,
-  Text,
-  TextField
-} from '@fluentui/react';
-import classname from 'classnames';
-
+import React, { useState, useEffect } from 'react';
+import { Label, PrimaryButton, Stack, Text } from '@fluentui/react';
+import { useAppDispatch, useTypedSelector } from '../app/store';
+import { ReviewList } from './ReviewList';
+import { startRephrasing } from '../redux/commonSlice';
 import { toFlattenObject } from '../utils/parse';
+import { rephraseAsync } from '../app/api';
 import _ from 'lodash';
+
 interface IProps {
   disabled: boolean
-  original: string
-  rephrased: string
-  startTranslation: () => void
-}
-
-interface IRephrasedItem {
-  keyName: string
-  originalValue: unknown
-  rephrasedValue: unknown
 }
 
 export const ReviewRephraseView: React.FC<IProps> = (props) => {
-  const { original, startTranslation, rephrased, disabled } = props;
-  const [originalRecords, setOriginalRecords] = useState<Record<string, unknown>>({});
-  const [rephrasedRecords, setRephrasedRecords] = useState<Record<string, unknown>>({});
+  const { disabled } = props;
+
+  const dispatch = useAppDispatch();
+
+  const rawText = useTypedSelector((state) => state.common.rawText);
+  const rephrasedText = useTypedSelector((state) => state.common.rephrasedText);
+
+  const [rephrasedRecords, setRephrasedRecords] = useState<Record<string, string>>({});
+
+  const originalRecords = toFlattenObject(rawText);
 
   useEffect(() => {
-    setOriginalRecords(toFlattenObject(original));
-  }, [original]);
+    setRephrasedRecords(toFlattenObject(rephrasedText));
+  }, [rephrasedText]);
 
-  useEffect(() => {
-    setRephrasedRecords(toFlattenObject(rephrased));
-  }, [rephrased]);
+  // useEffect(() => {
+  //   if (!_.isEmpty(rawText)) {
+  //     rephraseAsync(rawText).then(result => { setRephrasedRecords(toFlattenObject(result.text)); }).catch(e => { console.log(e); });
+  //   }
+  // }, [rawText]);
 
-  if (_.isEmpty(originalRecords) || _.isEmpty(rephrasedRecords)) {
-    return <></>;
-  }
-
-  const items: IRephrasedItem[] = Object.keys(rephrasedRecords).map(key => ({ keyName: key, originalValue: originalRecords[key], rephrasedValue: rephrasedRecords[key] }));
-
-  const columns: IColumn[] = [
-    { key: 'keyName', name: 'Key', fieldName: 'keyName', minWidth: 100, maxWidth: 200, isResizable: true },
-    { key: 'originalValue', name: 'Original Value', fieldName: 'originalValue', minWidth: 100, maxWidth: 200, isResizable: true },
-    { key: 'rephrasedValue', name: 'Rephrased Value', fieldName: 'rephrasedValue', minWidth: 100, maxWidth: 200, isResizable: true }
-  ];
-
-  function renderItemColumn (item: IRephrasedItem, index: number | undefined, column: IColumn | undefined) {
-    console.log(index);
-    if (column != null) {
-      const fieldContent = item[column.fieldName as keyof IRephrasedItem] as string;
-      const className = classname({ 'input-changed': item.originalValue !== item.rephrasedValue });
-      switch (column.key) {
-        case 'rephrasedValue':
-          return <TextField disabled={disabled} className={className} defaultValue={fieldContent} onChange={(event, value) => { setRephrasedRecords({ ...rephrasedRecords, [item.keyName]: value }); }}/>;
-        default:
-          return <span>{fieldContent}</span>;
-      }
-    }
-  }
+  const onStart = () => {
+    console.log(rephrasedRecords);
+    dispatch(startRephrasing(JSON.stringify(rephrasedRecords).slice(1).slice(0, -1)));
+  };
 
   return (
     <Stack tokens={{ childrenGap: 10 }} className='ReviewRephraseViewWrapper'>
-      <Label className='common__label'>Step 2 - Review result of rephrasing</Label>
-      <DetailsList
-            items={items}
-            columns={columns}
-            layoutMode={DetailsListLayoutMode.fixedColumns}
-            selectionMode={SelectionMode.none}
-            onRenderItemColumn={renderItemColumn}
-          />
-      <Text>After you confirm the rephrasing results, you will be directed to another page to complete the translation. Once the translation is started, you will not be able to modify the inputs here.</Text>
+      <Label className='common__label'>Step 2 - Review rephrasing results</Label>
+
+      <ReviewList
+        disabled={disabled}
+        original={originalRecords}
+        inReview={rephrasedRecords}
+        onChange={(key, value) => { setRephrasedRecords({ ...rephrasedRecords, [key]: value }); }}
+      />
+
+      <Text>Once the translation is started, you will not be able to modify the inputs above.</Text>
+
       <PrimaryButton
         className='editor__button'
         text="Confirm & Continue"
-        onClick={startTranslation}
+        onClick={onStart}
         disabled={disabled}
       />
     </Stack>

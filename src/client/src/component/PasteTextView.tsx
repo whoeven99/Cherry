@@ -2,15 +2,23 @@ import React from 'react';
 import { Dropdown, Label, PrimaryButton, Stack, Text, TextField } from '@fluentui/react';
 import { languageOptions } from '../data/languages';
 import { demoInput } from '../data/demo';
+import { useAppDispatch, useTypedSelector } from '../app/store';
+import { rephrase, setSourceLangId, Stage } from '../redux/commonSlice';
+import { toFlattenObject } from '../utils/parse';
 
 interface IProps {
   disabled: boolean
-  sourceLangId: string
-  setSourceLangId: (langId: string) => void
 }
 
 export const PasteTextView: React.FC<IProps> = (props) => {
-  const { disabled, sourceLangId, setSourceLangId } = props;
+  const { disabled } = props;
+
+  const dispatch = useAppDispatch();
+
+  const stage = useTypedSelector((state) => state.common.stage);
+  const sourceLangId = useTypedSelector((state) => state.common.sourceLangId);
+
+  const [input, setInput] = React.useState(demoInput);
 
   const languageDropdownJsx = (
     <Dropdown
@@ -19,7 +27,7 @@ export const PasteTextView: React.FC<IProps> = (props) => {
       selectedKey={sourceLangId}
       onChange={(event, option) => {
         if (option != null) {
-          setSourceLangId(option.key.toString());
+          dispatch(setSourceLangId(option.key.toString()));
         }
       }}
       options={languageOptions}
@@ -32,9 +40,16 @@ export const PasteTextView: React.FC<IProps> = (props) => {
       resizable
       rows={20}
       disabled={disabled}
-      defaultValue={demoInput}
+      value={input}
+      onChange={(event, newValue) => {
+        setInput(newValue ?? '');
+      }}
     />
   );
+
+  const onSubmit = () => {
+    dispatch(rephrase({ input: JSON.stringify(toFlattenObject(input)).slice(1).slice(0, -1) }));
+  };
 
   return (
     <Stack tokens={{ childrenGap: 10 }}>
@@ -46,8 +61,12 @@ export const PasteTextView: React.FC<IProps> = (props) => {
       </Stack>
 
       {textAreaJsx}
-      <Text>You will see the rephrasing results on the right. Please review each item and modify as necessary. All content cannot be changed after the translation has started.</Text>
-      <PrimaryButton text="Rephrase" className='editor__button' disabled={disabled} />
+      <Text>You will see the rephrasing results in next step. You will start translation from there.</Text>
+      <PrimaryButton
+        className='editor__button'
+        text={stage === Stage.LoadingRephrase ? 'Rephrasing...' : 'Rephrase'}
+        onClick={onSubmit}
+        disabled={disabled || input === '' || stage === Stage.LoadingRephrase} />
     </Stack>
   );
 };

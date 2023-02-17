@@ -1,47 +1,53 @@
-import React from 'react';
-import { ItemReviewList } from './ItemReviewList';
-import { selectAllTranslationsByLanguageId, updateTranslation } from '../redux/languageSlice';
-import { useAppDispatch, useTypedSelector } from '../app/store';
+import React, { useEffect } from 'react';
+import { useTypedSelector } from '../app/store';
+import { translateAsync } from '../app/api';
+import { demoInput } from '../data/demo';
+import { ReviewList } from './ReviewList';
 import { PrimaryButton } from '@fluentui/react';
 import { useTranslation } from 'react-i18next';
 import { saveLocaleFiles } from '../utils/saveFile';
-import { toLocalizationString } from '../utils/parse';
+import { toFlattenObject, toLocalizationString } from '../utils/parse';
 
 interface IProps {
   langId: string
 }
 
 export const ReviewPerLanguage: React.FC<IProps> = (props) => {
-  const dispatch = useAppDispatch();
-  const allTranslations = useTypedSelector(state => selectAllTranslationsByLanguageId(state, props.langId));
-  const {t} = useTranslation();
-  const {langId} = props;
+  const { langId } = props;
+  const { t } = useTranslation();
 
-  const allItems = allTranslations.map(t => ({
-    keyId: t.keyId,
-    source: t.source,
-    target: t.text
-  }));
+  const sourceText = useTypedSelector((state) => state.common.rephrasedText);
+  const [translatedRecords, setTranslatedRecords] = React.useState<Record<string, string>>({});
 
-  const onChange = (keyId: string, value: string) => {
-    dispatch(updateTranslation({ keyId, languageId: props.langId, text: value }));
-  };
+  useEffect(() => {
+    translateAsync(langId, demoInput)
+      .then((result) => {
+        setTranslatedRecords(toFlattenObject(result.text));
+      }).catch(e => {
+        console.log(e);
+      });
+  }, []);
+
+  const originalRecords = toFlattenObject(sourceText);
 
   const onExport = () => {
-    const finalRes:Record<string, string> = {};
-    allTranslations.forEach(item => finalRes[item.keyId] = item.text);
-    saveLocaleFiles(langId, toLocalizationString(finalRes, '.'));
-  }
+    saveLocaleFiles(langId, toLocalizationString(translatedRecords, '.'));
+  };
 
   return (
     <>
-      <ItemReviewList items={allItems} onChange={onChange} />
+      <ReviewList
+        disabled={false}
+        original={originalRecords}
+        inReview={translatedRecords}
+        onChange={(key, value) => { setTranslatedRecords({ ...translatedRecords, [key]: value }); }}
+      />
       <PrimaryButton
         className='editor__button'
-        text={t('button.export') as string}
+        text={t('button.export') ?? ''}
         onClick={onExport}
       />
     </>
-    
+
   );
 };
