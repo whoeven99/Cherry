@@ -1,4 +1,4 @@
-const baseUrl = 'https://cherrynodeservice.azurewebsites.net';
+const baseUrl = 'https://cherryservice.azurewebsites.net';
 
 export interface TextResponse {
   text: string

@@ -14,8 +14,12 @@ router.post('/rephrase', function(req, res, next) {
     console.log(`rephrase request, `, text);
     text = '{\n' + text + '\n}';
 
-    const ans = chatCall("Please rephrase the values of this json\n" +
-        "Give me a json string: \n" + text);
+    const chatReq = "These values of json are for the i18n of a commercial website.\n" +
+        "Please polish the values of this json\n" +
+        "Don't change too much.\n" +
+        "Give me a json string: \n";
+    console.log('chatApi req: ', chatReq);
+    const ans = chatCall(chatReq + text);
     ans.then(v => {
         console.log('rephrase response, ', v.data.choices);
         console.log('\n');
@@ -39,8 +43,11 @@ router.post('/translate', function(req, res, next) {
     let lan = lanMap[lang];
     console.log(`rephrase lang, text, `, lan, text);
 
-    const ans = chatCall("Please translate the values of this json, translate to " + lan + "\n" +
-        "Give me a json string: \n" + text);
+    const chatReq = "These values of json are for the i18n of a commercial website.\n" +
+        "Please translate the values of this json, translate to " + lan + "\n" +
+        "Give me a json string: \n";
+    console.log('chatApi req: ', chatReq);
+    const ans = chatCall(chatReq + text);
 
     ans.then(v => {
         console.log('translate response, ', v.data.choices);
