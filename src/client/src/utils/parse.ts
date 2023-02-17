@@ -31,10 +31,10 @@ const flatten = (object: Record<string, unknown>): Record<string, string> => {
   return res;
 };
 
-export const toLocalizationString = (record: Record<string, string>): string => {
+export const toLocalizationString = (record: Record<string, string>, delimiter = '/'): string => {
   const res: Record<string, unknown> = {};
   Object.keys(record).forEach(key => {
-    const path = key.split('/');
+    const path = key.split(delimiter);
     if (path.length === 1) {
       res[path[0]] = record[key];
     } else {
