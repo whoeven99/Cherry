@@ -72,6 +72,8 @@
         "step2Explanation": "Once the translation is started, you will not be able to modify the inputs above.",
         "step3": "Step 3 - Select your target languages",
         "learnMore": "Learn more",
-        "step4": "Step 4 - Review translation"
+        "step4": "Step 4 - Review translation",
+        "selectedLanguages_one": "{{count}} of {{total}} language selected",
+        "selectedLanguages_other": "{{count}} of {{total}} languages selected"
     }
 }
