@@ -7,7 +7,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const chatCall =(content, temperature = 0, max_tokens = 1000) => {
+const chatCall =(content, temperature = 0, max_tokens = 3000) => {
     return openai.createCompletion({
         model: "text-davinci-003",
         prompt: content,

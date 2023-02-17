@@ -10,23 +10,15 @@ import { toFlattenObject, toLocalizationString } from '../utils/parse';
 
 interface IProps {
   langId: string
+  translation: string
 }
 
 export const ReviewPerLanguage: React.FC<IProps> = (props) => {
-  const { langId } = props;
+  const { langId, translation } = props;
   const { t } = useTranslation();
 
   const sourceText = useTypedSelector((state) => state.common.rephrasedText);
-  const [translatedRecords, setTranslatedRecords] = React.useState<Record<string, string>>({});
-
-  useEffect(() => {
-    translateAsync(langId, sourceText)
-      .then((result) => {
-        setTranslatedRecords(toFlattenObject(result.text));
-      }).catch(e => {
-        console.log(e);
-      });
-  }, []);
+  const [translatedRecords, setTranslatedRecords] = React.useState<Record<string, string>>(toFlattenObject(translation));
 
   const originalRecords = toFlattenObject(sourceText);
 

@@ -33,7 +33,6 @@ export const ReviewList: React.FC<IProps> = (props) => {
   ];
 
   function renderItemColumn (item: IRephrasedItem, index: number | undefined, column: IColumn | undefined) {
-    console.log(index);
     if (column != null) {
       const fieldContent = item[column.fieldName as keyof IRephrasedItem] as string;
       const className = classname({ 'input-changed': item.originalValue !== item.inReviewValue });
