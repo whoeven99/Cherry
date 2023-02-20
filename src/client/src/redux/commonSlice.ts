@@ -28,7 +28,7 @@ export const rephrase = createAsyncThunk<string, { input: string } >(
 const initialState: CommonSliceState = {
   stage: Stage.PasteSource,
   sourceLangId: 'en',
-  targetLangIds: ['de', 'fr', 'es'],
+  targetLangIds: ['de', 'ru'],
   rawText: '',
   rephrasedText: ''
 };
