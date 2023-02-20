@@ -13,9 +13,8 @@ router.post('/rephrase', function(req, res, next) {
     let text = req.body.text;
     text = '{\n' + text + '\n}';
 
-    const chatReq = "This is a JSON file used for i18n of a website.\n" +
-        "Please polish the values of this json. Don't change too much.\n" +
-        "Give me a string with JSON format back. \n";
+    const chatReq = `This is a JSON string for i18n of a website. Please polish the text values and rephrase if necessary. Don't change the keys.
+        Give me a string as JSON literal.\n`;
     const content = chatReq + text;
     console.log(`/rephrase request content:\n` + content);
 
