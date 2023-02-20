@@ -15,8 +15,8 @@ router.post('/rephrase', function(req, res, next) {
 
     const lang = req.body.lang ?? "English"; 
 
-    const chatReq = `This is a JSON file used for i18n of a website in ${lang}. 
-    Please polish the values of this json in ${lang}. Don't change too much. Give me a string with JSON format back.`;
+    const chatReq = `This is a JSON string for i18n of a website. Please polish the text values and rephrase in ${lang} if necessary. Don't change the keys.
+    Give me a string as JSON literal.\n`;
 
     const content = chatReq + text;
     console.log(`/rephrase request content:\n` + content);
@@ -53,9 +53,9 @@ router.post('/translate', function(req, res, next) {
     text = '{\n' + text + '\n}';
     let lan = lanMap[lang];
 
-    const chatReq = `This is a JSON file used for i18n of a website. Please translate the text values to ${lan} and don't change the keys. 
-    Please be careful about the different plural forms in different languages and add keys if necessary.
-    Give me a string with JSON format back.\n`;
+    const chatReq = `This is a JSON string for i18n of a website. Please translate each of the text value to ${lan}. Don't change the keys. 
+    Pay attention to the different plural forms in different languages, so you should add/remove keys if necessary. For example, "books" might have multiple plural forms in Russian.
+    Give me a string as JSON literal.\n`;
     const content = chatReq + text;
     console.log(`/translate request content:\n` + content);
 

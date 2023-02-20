@@ -1,11 +1,12 @@
 import React from 'react';
-import { Dropdown, Label, PrimaryButton, Stack, Text, TextField } from '@fluentui/react';
+import { Dropdown, Label, PrimaryButton, Spinner, Stack, Text, TextField } from '@fluentui/react';
 import { languageOptions } from '../data/languages';
 import { demoInput } from '../data/demo';
 import { useAppDispatch, useTypedSelector } from '../app/store';
 import { rephrase, setSourceLangId, Stage } from '../redux/commonSlice';
 import { toFlattenObject } from '../utils/parse';
 import { useTranslation } from 'react-i18next';
+
 interface IProps {
   disabled: boolean
 }
@@ -49,7 +50,7 @@ export const PasteTextView: React.FC<IProps> = (props) => {
   );
 
   const onSubmit = () => {
-    dispatch(rephrase({ input: JSON.stringify(toFlattenObject(input)).slice(1).slice(0, -1) }));
+    dispatch(rephrase({ input: JSON.stringify(toFlattenObject(input)).slice(1, -1) }));
   };
 
   return (
@@ -63,11 +64,16 @@ export const PasteTextView: React.FC<IProps> = (props) => {
 
       {textAreaJsx}
       <Text>{t('label.step1Explanation')}</Text>
-      <PrimaryButton
-        className='editor__button'
-        text={(stage === Stage.LoadingRephrase ? t('button.rephrasing') : t('button.rephrase')) ?? ''}
-        onClick={onSubmit}
-        disabled={disabled || input === '' || stage === Stage.LoadingRephrase} />
+      <Stack horizontal tokens={{ childrenGap: 20 }} >
+        <PrimaryButton
+          className='editor__button'
+          text={t('button.rephrase') ?? ''}
+          onClick={onSubmit}
+          disabled={disabled || input === '' || stage === Stage.LoadingRephrase} />
+        { stage === Stage.LoadingRephrase && (
+          <Spinner label={t('button.rephrasing') ?? ''} labelPosition="right" />
+        )}
+      </Stack>
     </Stack>
   );
 };

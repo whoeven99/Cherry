@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { commonSlice } from '../redux/commonSlice';
+import { translationSlice } from '../redux/translationSlice';
 
 export const store = configureStore({
   reducer: {
-    common: commonSlice.reducer
+    common: commonSlice.reducer,
+    translation: translationSlice.reducer
   }
 });
 
