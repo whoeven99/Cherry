@@ -38,9 +38,9 @@ router.post('/translate', function(req, res, next) {
     text = '{\n' + text + '\n}';
     let lan = lanMap[lang];
 
-    const chatReq = `This is a JSON file used for i18n of a website. Please translate the text values to ${lan} and don't change the keys. 
-    Please be careful about the different plural forms in different languages and add keys if necessary.
-    Give me a string with JSON format back.\n`;
+    const chatReq = `This is a JSON string for i18n of a website. Please translate each of the text value to ${lan}. Don't change the keys. 
+    Pay attention to the different plural forms in different languages, so you should add/remove keys if necessary. For example, "books" might have multiple plural forms in Russian.
+    Give me a string as JSON literal.\n`;
     const content = chatReq + text;
     console.log(`/translate request content:\n` + content);
 
