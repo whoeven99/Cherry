@@ -13,22 +13,38 @@ router.post('/rephrase', function(req, res, next) {
     let text = req.body.text;
     text = '{\n' + text + '\n}';
 
-    const chatReq = `This is a JSON string for i18n of a website. Please polish the text values and rephrase if necessary. Don't change the keys.
-        Give me a string as JSON literal.\n`;
+    const lang = req.body.lang ?? "English"; 
+
+    const chatReq = `This is a JSON string for i18n of a website. Please polish the text values and rephrase in ${lang} if necessary. Don't change the keys.
+    Give me a string as JSON literal.\n`;
+
     const content = chatReq + text;
     console.log(`/rephrase request content:\n` + content);
 
+    callTillSucceeded(content, res);
+});
+
+const callTillSucceeded = (content, res) => {
     chatCall(content)
         .then(v => {
-        console.log('rephrase response, ', v.data.choices);
-        console.log('\n');
+            console.log('rephrase response, ', v.data.choices);
+            console.log('\n');
 
-        let anstext = v.data.choices[0].text;
+            let anstext = v.data.choices[0].text;
 
-        console.log('response: ', anstext);
-        res.send({"text": anstext});
-    })
-});
+            console.log('response: ', anstext);
+            res.send({"text": anstext});
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log(error.response.status);
+                console.log(error.response.data);
+            } else {
+                console.log(error.message);
+            }
+            callTillSucceeded(content, res);
+        })
+} 
 
 router.post('/translate', function(req, res, next) {
     let  text = req.body.text;
@@ -43,15 +59,7 @@ router.post('/translate', function(req, res, next) {
     const content = chatReq + text;
     console.log(`/translate request content:\n` + content);
 
-    chatCall(content).then(v => {
-        console.log('translate response, ', v.data.choices);
-        console.log('\n');
-
-        let anstext = v.data.choices[0].text;
-
-        console.log('response: ', anstext);
-        res.send({"text": anstext});
-    })
+    callTillSucceeded(content, res);
 });
 
 const lanMap = {
