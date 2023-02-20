@@ -20,7 +20,7 @@ export const MainPageView: React.FC = () => {
   return (
     <Stack tokens={{ childrenGap: 40 }} className='editorWrapper'>
       <PasteTextView
-        disabled={stage >= Stage.LoadingRephrase}/>
+        disabled={stage === Stage.LoadingRephrase}/>
 
       { stage >= Stage.Rephrase && (
         <ReviewRephraseView
