@@ -11,24 +11,20 @@ router.get('/', function(req, res, next) {
 
 router.post('/rephrase', function(req, res, next) {
     let text = req.body.text;
-    console.log(`rephrase request, `, text);
     text = '{\n' + text + '\n}';
 
-    const chatReq = "These values of json are for the i18n of a commercial website.\n" +
-        "Please polish the values of this json\n" +
-        "Don't change too much.\n" +
-        "Give me a json string: \n";
-    console.log('chatApi req: ', chatReq);
-    const ans = chatCall(chatReq + text);
-    ans.then(v => {
+    const chatReq = "This is a JSON file used for i18n of a website.\n" +
+        "Please polish the values of this json. Don't change too much.\n" +
+        "Give me a string with JSON format back. \n";
+    const content = chatReq + text;
+    console.log(`/rephrase request content:\n` + content);
+
+    chatCall(content)
+        .then(v => {
         console.log('rephrase response, ', v.data.choices);
         console.log('\n');
 
         let anstext = v.data.choices[0].text;
-        anstext = unescape(anstext);
-        anstext = anstext.substring(anstext.indexOf('{') + 1);
-        anstext = anstext.substring(0, anstext.indexOf('}'));
-        anstext = anstext.trim();
 
         console.log('response: ', anstext);
         res.send({"text": anstext});
@@ -41,23 +37,18 @@ router.post('/translate', function(req, res, next) {
 
     text = '{\n' + text + '\n}';
     let lan = lanMap[lang];
-    console.log(`rephrase lang, text, `, lan, text);
 
-    const chatReq = "These values of json are for the i18n of a commercial website.\n" +
-        "Please translate the values of this json, translate to " + lan + "\n" +
-        "Give me a json string: \n";
-    console.log('chatApi req: ', chatReq);
-    const ans = chatCall(chatReq + text);
+    const chatReq = `This is a JSON file used for i18n of a website. Please translate the text values to ${lan} and don't change the keys. 
+    Please be careful about the different plural forms in different languages and add keys if necessary.
+    Give me a string with JSON format back.\n`;
+    const content = chatReq + text;
+    console.log(`/translate request content:\n` + content);
 
-    ans.then(v => {
+    chatCall(content).then(v => {
         console.log('translate response, ', v.data.choices);
         console.log('\n');
 
         let anstext = v.data.choices[0].text;
-        anstext = unescape(anstext);
-        anstext = anstext.substring(anstext.indexOf('{') + 1);
-        anstext = anstext.substring(0, anstext.indexOf('}'));
-        anstext = anstext.trim();
 
         console.log('response: ', anstext);
         res.send({"text": anstext});
