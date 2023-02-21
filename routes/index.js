@@ -9,58 +9,156 @@ router.get('/', function(req, res, next) {
     res.sendFile(path.join(__dirname, "../public", "index.html"));
 });
 
-router.post('/rephrase', function(req, res, next) {
+router.post('/rephrase', async function(req, res, next) {
     let text = req.body.text;
-    text = '{\n' + text + '\n}';
-
+    // text = '{\n' + text + '\n}';
+    const items = split2Sub(tryParse(text));
     const lang = req.body.lang ?? "English"; 
+
+    const response = await getRephraseResponse(items, lang);
+
+    const returnedObjects = response.map(tryParse);
+
+    const result = {};
+
+    returnedObjects.forEach(o => {
+        Object.assign(result, o);
+    });
+
+    const resStr = JSON.stringify(result);
+
+    console.log(`/rephrase request content:\n` + resStr);
+
+    res.send({"text": resStr});
+
+    // const lang = req.body.lang ?? "English"; 
+
+    // const chatReq = `This is a JSON string for i18n of a website. Please polish the text values and rephrase in ${lang} if necessary. Don't change the keys.
+    // Give me a string as JSON literal.\n`;
+
+    // const content = chatReq + text;
+    // console.log(`/rephrase request content:\n` + content);
+
+    // callTillSucceeded(content, res);
+});
+
+const getRephraseResponse = async(items, lang) => {
+    const res = [];
 
     const chatReq = `This is a JSON string for i18n of a website. Please polish the text values and rephrase in ${lang} if necessary. Don't change the keys.
     Give me a string as JSON literal.\n`;
 
-    const content = chatReq + text;
-    console.log(`/rephrase request content:\n` + content);
+    const content = chatReq + JSON.stringify(items[0])
 
-    callTillSucceeded(content, res);
-});
+    res.push(await callTillSucceeded(content));
 
-const callTillSucceeded = (content, res) => {
-    chatCall(content)
-        .then(v => {
-            console.log('rephrase response, ', v.data.choices);
-            console.log('\n');
+    if(items.length > 1) {
+        for(let i = 1; i < items.length; i++) {
+            const content = chatReq + JSON.stringify(items[i]);
+            res.push(await callTillSucceeded(content));
+        }
+    }
 
-            let anstext = v.data.choices[0].text;
+    return res;
+}
 
-            console.log('response: ', anstext);
-            res.send({"text": anstext});
-        })
-        .catch(error => {
-            if (error.response) {
-                console.log(error.response.status);
-                console.log(error.response.data);
-            } else {
-                console.log(error.message);
-            }
-            callTillSucceeded(content, res);
-        })
+const tryParse = (content) => {
+    let res;
+    try {
+        res = JSON.parse(content);
+    } catch {
+        try {
+            res = JSON.parse(`{${content}}`);
+        } catch {
+            res = {};
+        }
+    }
+    return res;
+}
+
+const split2Sub = (items, maxLen = 1000) => {
+    const res = [];
+    let length = 0;
+    let tmp = {};
+    Object.keys(items).forEach(key => {
+        if(length + key.length + items[key].length + 1 > maxLen) {
+            res.push(tmp);
+            length = 0;
+            tmp = {};
+        }
+        length += (key.length + items[key].length);
+        tmp[key] = items[key];
+        
+    });
+    res.push(tmp);
+    return res;
+}
+
+const callTillSucceeded = async (content) => {
+    let res;
+    try {
+        res = (await chatCall(content)).data.choices[0].text
+    } catch {
+        res = await callTillSucceeded(content);
+    }
+    
+    console.log(`request: ${content}\n`)
+    console.log(`result: ${res}\n`)
+    return res;
 } 
 
-router.post('/translate', function(req, res, next) {
+router.post('/translate', async function(req, res, next) {
     let  text = req.body.text;
     const lang = req.body.lang;
 
-    text = '{\n' + text + '\n}';
-    let lan = lanMap[lang];
+    const items = split2Sub(tryParse(text));
+    let languageName = lanMap[lang];
 
-    const chatReq = `This is a JSON string for i18n of a website. Please translate each of the text value to ${lan}. Don't change the keys. 
+    const response = await getTranslateResponse(items, languageName);
+
+    const returnedObjects = response.map(tryParse);
+
+    const result = {};
+
+    returnedObjects.forEach(o => {
+        Object.assign(result, o);
+    });
+
+    const resStr = JSON.stringify(result);
+
+    console.log(`/translate request content:\n` + resStr);
+
+    res.send({"text": resStr});
+
+    // const chatReq = `This is a JSON string for i18n of a website. Please translate each of the text value to ${lan}. Don't change the keys. 
+    // Pay attention to the different plural forms in different languages, so you should add/remove keys if necessary. For example, "books" might have multiple plural forms in Russian.
+    // Give me a string as JSON literal.\n`;
+    // const content = chatReq + text;
+    // console.log(`/translate request content:\n` + content);
+
+    // callTillSucceeded(content, res);
+});
+
+const getTranslateResponse = async(items, lang) => {
+    const res = [];
+
+    const chatReq = `This is a JSON string for i18n of a website. Please translate each of the text value to ${lang}. Don't change the keys. 
     Pay attention to the different plural forms in different languages, so you should add/remove keys if necessary. For example, "books" might have multiple plural forms in Russian.
     Give me a string as JSON literal.\n`;
-    const content = chatReq + text;
-    console.log(`/translate request content:\n` + content);
 
-    callTillSucceeded(content, res);
-});
+    const content = chatReq + JSON.stringify(items[0])
+
+    res.push(await callTillSucceeded(content));
+
+    if(items.length > 1) {
+        for(let i = 1; i < items.length; i++) {
+            const content = chatReq + JSON.stringify(items[i]);
+            res.push(await callTillSucceeded(content));
+        }
+    }
+
+    return res;
+}
 
 const lanMap = {
     "am": "Amharic",
