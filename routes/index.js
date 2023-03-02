@@ -97,7 +97,8 @@ const split2Sub = (items, maxLen = 1000) => {
 const callTillSucceeded = async (content) => {
     let res;
     try {
-        res = (await chatCall(content)).data.choices[0].text
+        const response = await chatCall(content);
+        res = response.data.choices[0].message.content;
     } catch {
         res = await callTillSucceeded(content);
     }
@@ -143,7 +144,9 @@ const getTranslateResponse = async(items, lang) => {
     const res = [];
 
     const chatReq = `This is a JSON string for i18n of a website. Please translate each of the text value to ${lang}. Don't change the keys. 
-    Pay attention to the different plural forms in different languages, so you should add/remove keys if necessary. For example, "books" might have multiple plural forms in Russian.
+    Pay attention to the different plural forms in some languages, so you should add/remove keys if necessary. 
+    If you encounter a key that ends with "few" or "other", please be careful to refer to CLDR to provide the correct plural forms if necessary.
+    Don't add duplicate unnecessary keys in languages that don't have such rules.
     Give me a string as JSON literal.\n`;
 
     const content = chatReq + JSON.stringify(items[0])
