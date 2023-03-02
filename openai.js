@@ -8,9 +8,9 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const chatCall =(content, temperature = 0, max_tokens = 3000) => {
-    return openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: content,
+    return openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: 'user', content: content }],
         temperature,
         max_tokens,
     });
