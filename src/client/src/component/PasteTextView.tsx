@@ -40,7 +40,7 @@ export const PasteTextView: React.FC<IProps> = (props) => {
     <TextField
       multiline
       resizable
-      rows={20}
+      rows={25}
       disabled={disabled}
       value={input}
       onChange={(event, newValue) => {

@@ -39,10 +39,6 @@
     font-size: 13px;
 }
 
-.input-changed input{
-    background: rgba(255, 213, 170, 0.8);
-}
-
 .ms-DetailsHeader {
     padding-top: 0;
 }
