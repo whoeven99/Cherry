@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Label, PrimaryButton, Stack, Text } from '@fluentui/react';
 import { useAppDispatch, useTypedSelector } from '../app/store';
 import { ReviewList } from './ReviewList';
 import { startRephrasing } from '../redux/commonSlice';
 import { toFlattenObject, toLocalizationString } from '../utils/parse';
-import { rephraseAsync } from '../app/api';
-import _ from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { saveLocaleFiles } from '../utils/saveFile';
 
@@ -32,7 +30,6 @@ export const ReviewRephraseView: React.FC<IProps> = (props) => {
   }, [rephrasedText]);
 
   const onStart = () => {
-    console.log(rephrasedRecords);
     dispatch(startRephrasing(JSON.stringify(rephrasedRecords).slice(1).slice(0, -1)));
   };
 

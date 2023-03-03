@@ -1,20 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { DetailsList, DetailsListLayoutMode, type IColumn, SelectionMode, TextField } from '@fluentui/react';
-import { toFlattenObject } from '../utils/parse';
+import React from 'react';
+import {
+  DetailsList,
+  DetailsListLayoutMode,
+  type IColumn,
+  IconButton,
+  SelectionMode,
+  Text,
+  TextField
+} from '@fluentui/react';
 import _ from 'lodash';
-import classname from 'classnames';
 
 interface IProps {
   disabled: boolean
-  original: Record<string, unknown>
-  inReview: Record<string, unknown>
+  original: Record<string, string>
+  inReview: Record<string, string>
   onChange: (key: string, value: string) => void
 }
 
 interface IRephrasedItem {
   keyName: string
-  originalValue: unknown
-  inReviewValue: unknown
+  originalValue: string
+  inReviewValue: string
 }
 
 export const ReviewList: React.FC<IProps> = (props) => {
@@ -26,22 +32,42 @@ export const ReviewList: React.FC<IProps> = (props) => {
 
   const items: IRephrasedItem[] = Object.keys(inReviewRecords).map(key => ({ keyName: key, originalValue: originalRecords[key], inReviewValue: inReviewRecords[key] }));
 
+  const onRenderTextField = (item: IRephrasedItem) => {
+    const different = item.originalValue !== item.inReviewValue;
+    return <TextField
+      disabled={disabled}
+      styles={different ? { field: { backgroundColor: '#FFD5AACC' } } : undefined}
+      autoAdjustHeight
+      value={item.inReviewValue}
+      rows={2}
+      multiline={item.inReviewValue.length > 60}
+      onChange={(event, value) => { onChange(item.keyName, value ?? ''); }}
+    />;
+  };
+
+  const onRenderAction = (item: IRephrasedItem) => {
+    if (item.originalValue !== item.inReviewValue) {
+      return <IconButton
+        iconProps={{ iconName: 'Undo' }}
+        title="Revert"
+        ariaLabel="Revert"
+        disabled={disabled}
+        onClick={() => { onChange(item.keyName, item.originalValue); }}
+      />;
+    }
+  };
+
   const columns: IColumn[] = [
-    { key: 'keyName', name: 'Key', fieldName: 'keyName', minWidth: 200, maxWidth: 300, isResizable: true },
-    { key: 'originalValue', name: 'Original Value', fieldName: 'originalValue', minWidth: 200, maxWidth: 300, isResizable: true },
-    { key: 'inReviewValue', name: 'In Review Value', fieldName: 'inReviewValue', minWidth: 200, maxWidth: 300, isResizable: true }
+    { key: 'keyName', name: 'Key', fieldName: 'keyName', minWidth: 250, maxWidth: 350, isResizable: true },
+    { key: 'originalValue', name: 'Original', fieldName: 'originalValue', minWidth: 400, maxWidth: 400, isResizable: true, isMultiline: true },
+    { key: 'inReviewValue', name: 'Generated', fieldName: 'inReviewValue', minWidth: 400, maxWidth: 400, isResizable: true, isMultiline: true, onRender: onRenderTextField },
+    { key: 'action', name: 'Action', minWidth: 100, maxWidth: 100, isResizable: true, onRender: onRenderAction }
   ];
 
   function renderItemColumn (item: IRephrasedItem, index: number | undefined, column: IColumn | undefined) {
     if (column != null) {
-      const fieldContent = item[column.fieldName as keyof IRephrasedItem] as string;
-      const className = classname({ 'input-changed': item.originalValue !== item.inReviewValue });
-      switch (column.key) {
-        case 'inReviewValue':
-          return <TextField disabled={disabled} className={className} defaultValue={fieldContent} onChange={(event, value) => { onChange(item.keyName, value ?? ''); }}/>;
-        default:
-          return <span>{fieldContent}</span>;
-      }
+      const fieldContent = item[column.fieldName as keyof IRephrasedItem];
+      return <Text nowrap={false}>{fieldContent}</Text>;
     }
   }
 
@@ -52,6 +78,7 @@ export const ReviewList: React.FC<IProps> = (props) => {
       layoutMode={DetailsListLayoutMode.fixedColumns}
       selectionMode={SelectionMode.none}
       onRenderItemColumn={renderItemColumn}
+      onShouldVirtualize={() => false}
     />
   );
 };
