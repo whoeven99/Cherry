@@ -45,6 +45,7 @@ export const commonSlice = createSlice({
     },
     startRephrasing (state, action: PayloadAction<string>) {
       state.stage = Stage.SelectTargetLanguages;
+      state.rephrasedText = action.payload;
     },
     setTargetLangIds (state, action: PayloadAction<string[]>) {
       state.targetLangIds = action.payload;
