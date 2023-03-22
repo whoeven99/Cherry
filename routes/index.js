@@ -16,6 +16,7 @@ router.post('/rephrase', async function(req, res, next) {
     const lang = req.body.lang ?? "English"; 
 
     const response = await getRephraseResponse(items, lang);
+    console.log(response);
 
     const returnedObjects = response.map(tryParse);
 
@@ -27,19 +28,9 @@ router.post('/rephrase', async function(req, res, next) {
 
     const resStr = JSON.stringify(result);
 
-    console.log(`/rephrase request content:\n` + resStr);
+    console.log(`/rephrase request result:\n` + resStr);
 
     res.send({"text": resStr});
-
-    // const lang = req.body.lang ?? "English"; 
-
-    // const chatReq = `This is a JSON string for i18n of a website. Please polish the text values and rephrase in ${lang} if necessary. Don't change the keys.
-    // Give me a string as JSON literal.\n`;
-
-    // const content = chatReq + text;
-    // console.log(`/rephrase request content:\n` + content);
-
-    // callTillSucceeded(content, res);
 });
 
 const getRephraseResponse = async(items, lang) => {
@@ -64,13 +55,24 @@ const getRephraseResponse = async(items, lang) => {
 
 const tryParse = (content) => {
     let res;
+    console.log(`try parse content: ${content}`);
     try {
         res = JSON.parse(content);
     } catch {
         try {
             res = JSON.parse(`{${content}}`);
         } catch {
-            res = {};
+            try {
+                const regex = /{[^{}]*}/g;
+                const found = content.match(regex);
+                if(found.length > 0) {
+                    res = JSON.parse(found[0]);
+                } else {
+                    res = {};
+                }
+            } catch {
+                res = {};
+            }
         }
     }
     return res;
@@ -102,9 +104,6 @@ const callTillSucceeded = async (content) => {
     } catch {
         res = await callTillSucceeded(content);
     }
-    
-    console.log(`request: ${content}\n`)
-    console.log(`result: ${res}\n`)
     return res;
 } 
 
@@ -130,14 +129,6 @@ router.post('/translate', async function(req, res, next) {
     console.log(`/translate request content:\n` + resStr);
 
     res.send({"text": resStr});
-
-    // const chatReq = `This is a JSON string for i18n of a website. Please translate each of the text value to ${lan}. Don't change the keys. 
-    // Pay attention to the different plural forms in different languages, so you should add/remove keys if necessary. For example, "books" might have multiple plural forms in Russian.
-    // Give me a string as JSON literal.\n`;
-    // const content = chatReq + text;
-    // console.log(`/translate request content:\n` + content);
-
-    // callTillSucceeded(content, res);
 });
 
 const getTranslateResponse = async(items, lang) => {
